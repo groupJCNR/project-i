@@ -1,24 +1,43 @@
 package se.groupjcnr.projecti.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "WORKITEM")
 public class WorkItem extends AbstractEntity {
 
+	@Column(nullable = false)
+	private String title;
+	
+	@Lob
+	@Column(columnDefinition="CLOB NOT NULL")
+	private String description;
+	
+	@Column(nullable = false)
+	private int priority;
+	
+	private List<Issue> issues;
+	
+	private Status status;
+	
 	public enum Status {
 		OPEN, ASSIGNED, DOING, DONE, REMOVED
 	}
+	
+	public WorkItem(String title, String description) {
+		this.title = title;
+		this.description = description;
+		this.issues = new ArrayList<>();
+		this.status = status.OPEN;
+	}
 
-	private String title, description;
-	private Status status;
-	private int priority;
-	private List<Issue> issueList;
-
-	public WorkItem() {
+	protected WorkItem() {
 		super();
 	}
 
@@ -54,12 +73,12 @@ public class WorkItem extends AbstractEntity {
 		this.priority = priority;
 	}
 
-	public List<Issue> getIssueList() {
-		return issueList;
+	public List<Issue> getIssues() {
+		return issues;
 	}
 
-	public void setIssueList(List<Issue> issueList) {
-		this.issueList = issueList;
+	public void setIssues(List<Issue> issues) {
+		this.issues = issues;
 	}
 
 }

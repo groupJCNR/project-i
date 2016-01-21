@@ -2,6 +2,7 @@ package se.groupjcnr.projecti.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,13 +14,32 @@ public class User extends AbstractEntity {
 		ACTIVE, INACTIVE
 	}
 
-	private String firstName, lastName;
-	private List<Team> teamList;
-	private List<WorkItem> workList;
+	@Column(nullable = false)
+	private String firstName;
+	
+	@Column(nullable = false)
+	private String lastName;
+	
+	@Column(nullable = false)
 	private Status status;
+	
+	@Column(nullable = false)
+	private String username;
+	
+	@Column(nullable = false)
+	private Long userId;
+	
+	private List<Team> teams;
+	private List<WorkItem> workItems;
 
-	public User() {
+	protected User() {
 		super();
+	}
+	
+	protected User(String firstName, String lastName, Status status) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.status = status;
 	}
 
 	public String getFirstName() {
@@ -38,20 +58,20 @@ public class User extends AbstractEntity {
 		this.lastName = lastName;
 	}
 
-	public List<Team> getTeamList() {
-		return teamList;
+	public List<Team> getTeams() {
+		return teams;
 	}
 
-	public void setTeamList(List<Team> teamList) {
-		this.teamList = teamList;
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
-	public List<WorkItem> getWorkList() {
-		return workList;
+	public List<WorkItem> getWorkItems() {
+		return workItems;
 	}
 
-	public void setWorkList(List<WorkItem> workList) {
-		this.workList = workList;
+	public void setWorkItems(List<WorkItem> workItems) {
+		this.workItems = workItems;
 	}
 
 	public Status getStatus() {
@@ -60,5 +80,21 @@ public class User extends AbstractEntity {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 }

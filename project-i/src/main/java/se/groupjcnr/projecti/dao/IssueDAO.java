@@ -1,5 +1,7 @@
 package se.groupjcnr.projecti.dao;
 
-public interface IssueDAO {
+import se.groupjcnr.projecti.model.Issue;
+
+public interface IssueDAO extends CrudDAO<Issue> {
 
 }
