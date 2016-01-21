@@ -29,8 +29,8 @@ public class User extends AbstractEntity {
 	@Column(nullable = false)
 	private Long userId;
 	
-	private List<Team> teamList;
-	private List<WorkItem> workList;
+	private List<Team> teams;
+	private List<WorkItem> workItems;
 
 	protected User() {
 		super();
@@ -58,20 +58,20 @@ public class User extends AbstractEntity {
 		this.lastName = lastName;
 	}
 
-	public List<Team> getTeamList() {
-		return teamList;
+	public List<Team> getTeams() {
+		return teams;
 	}
 
-	public void setTeamList(List<Team> teamList) {
-		this.teamList = teamList;
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
-	public List<WorkItem> getWorkList() {
-		return workList;
+	public List<WorkItem> getWorkItems() {
+		return workItems;
 	}
 
-	public void setWorkList(List<WorkItem> workList) {
-		this.workList = workList;
+	public void setWorkItems(List<WorkItem> workItems) {
+		this.workItems = workItems;
 	}
 
 	public Status getStatus() {
