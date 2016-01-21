@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name= "TEAM")
 public class Team extends AbstractEntity {
 	
 	public enum Status{
@@ -18,6 +20,8 @@ public class Team extends AbstractEntity {
     
     private List<WorkItem> items;
     private List<User> users;
+    
+    @Column(nullable = false)
     private Status status;
    
     public Team(String name){
