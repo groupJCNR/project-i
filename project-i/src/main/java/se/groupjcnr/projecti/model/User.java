@@ -2,6 +2,7 @@ package se.groupjcnr.projecti.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,13 +14,32 @@ public class User extends AbstractEntity {
 		ACTIVE, INACTIVE
 	}
 
-	private String firstName, lastName;
+	@Column(nullable = false)
+	private String firstName;
+	
+	@Column(nullable = false)
+	private String lastName;
+	
+	@Column(nullable = false)
+	private Status status;
+	
+	@Column(nullable = false)
+	private String username;
+	
+	@Column(nullable = false)
+	private Long userId;
+	
 	private List<Team> teamList;
 	private List<WorkItem> workList;
-	private Status status;
 
-	public User() {
+	protected User() {
 		super();
+	}
+	
+	protected User(String firstName, String lastName, Status status) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.status = status;
 	}
 
 	public String getFirstName() {
@@ -60,5 +80,21 @@ public class User extends AbstractEntity {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 }
