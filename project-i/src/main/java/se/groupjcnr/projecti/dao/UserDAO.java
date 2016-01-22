@@ -15,7 +15,7 @@ public interface UserDAO extends CrudDAO<User>{
     
     List<User> getUserByTeam(Team team);
 
-    List<User> getAllUsers();
+    List<User> getAll();
     
     
 }

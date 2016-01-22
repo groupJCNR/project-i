@@ -31,8 +31,8 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<User> getAllUsers() {
-		return query("User.getAllUsers", identity());
+	public List<User> getAll() {
+		return query("User.getAll", identity());
 	}
 
 }

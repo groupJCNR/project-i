@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,18 +15,23 @@ public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String title;
-	
-	@Lob
-	@Column(columnDefinition="CLOB NOT NULL")
+
+	@Column(nullable = false)
 	private String description;
-	
+
 	@Column(nullable = false)
 	private int priority;
-	
+
 	@OneToMany
 	private List<Issue> issues;
-	
-	@Column
+
+	@ManyToOne
+	private User user;
+
+	@ManyToOne
+	private Team team;
+
+	@Column(nullable = false)
 	private Status status;
 	
 	public enum Status {
