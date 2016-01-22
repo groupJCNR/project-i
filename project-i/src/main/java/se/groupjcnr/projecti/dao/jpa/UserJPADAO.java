@@ -11,7 +11,7 @@ import static java.util.function.Function.identity;
 
 public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 
-	protected UserJPADAO(EntityManagerFactory factory) {
+	public UserJPADAO(EntityManagerFactory factory) {
 		super(User.class, factory);
 	}
 

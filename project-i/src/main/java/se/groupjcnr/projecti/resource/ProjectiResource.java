@@ -1,10 +1,13 @@
 package se.groupjcnr.projecti.resource;
 
 
+import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -15,7 +18,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import se.groupjcnr.projecti.dao.IssueDAO;
+import se.groupjcnr.projecti.dao.UserDAO;
 import se.groupjcnr.projecti.dao.jpa.IssueJPADAO;
+import se.groupjcnr.projecti.dao.jpa.UserJPADAO;
 import se.groupjcnr.projecti.model.Issue;
 import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
@@ -29,6 +34,7 @@ import se.groupjcnr.projecti.model.WorkItem;
 public class ProjectiResource {
 
 	private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("PI");
+	private static final UserDAO userDAO = new UserJPADAO(factory);
 	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
 	
 	@Context
