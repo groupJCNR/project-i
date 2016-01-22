@@ -3,9 +3,9 @@
 	<persistence-unit name="PI" transaction-type="RESOURCE_LOCAL">
 		<class>se.groupjcnr.projecti.model.Issue</class>
 		<class>se.groupjcnr.projecti.model.AbstractEntity</class>
-		<class>se.groupjcnr.projecti.model.User</class>
 		<class>se.groupjcnr.projecti.model.WorkItem</class>
 		<class>se.groupjcnr.projecti.model.Team</class>
+		<class>se.groupjcnr.projecti.model.User</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby:/var/lib/tomcat8/webapps/db/project-i-db;create=true"/>
 			<property name="javax.persistence.jdbc.user" value="test"/>

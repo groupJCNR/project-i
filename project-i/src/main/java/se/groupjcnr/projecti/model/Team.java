@@ -12,17 +12,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name= "TEAM", schema = "PROJECTI")
 public class Team extends AbstractEntity {
-	
-    @Column(nullable = false)
+
+	@Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+	@Column(nullable = false)
     private Status status;
 
-    @OneToMany
+	@OneToMany
     private List<WorkItem> items;
-    
-    @ManyToMany
+
+	@ManyToMany
     private List<User> users;
     
 	public enum Status{

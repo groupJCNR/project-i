@@ -13,10 +13,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Jersey Web Application</servlet-name>
-<<<<<<< HEAD
     <url-pattern>/webapi/*</url-pattern>
-=======
-    <url-pattern>/*</url-pattern>
->>>>>>> refs/remotes/origin/master
   </servlet-mapping>
 </web-app>

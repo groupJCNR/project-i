@@ -14,8 +14,8 @@ public class Issue extends AbstractEntity {
 	
 	@ManyToOne
 	private WorkItem workItem;
-	
-	@Column
+
+	@Column(nullable = false)
 	private Status status;
 	
 	public enum Status {

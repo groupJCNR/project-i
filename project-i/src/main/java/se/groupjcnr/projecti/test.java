@@ -14,9 +14,9 @@ public class test {
 	private static final UserDAO userDAO = new UserJPADAO(factory);
 	
 	public static void main(String[] args) {
-		User u = new User("ninja", "alfons", "karate");
+		User u = new User("ninja1", "alfons1", "karate1");
 		userDAO.save(u);
-		System.out.println(u.getFirstName());
+		System.out.println("saved");
 		
 		List<User> users = userDAO.getAllUsers();
 		System.out.println(users.get(0));

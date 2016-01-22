@@ -11,22 +11,22 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER", schema = "PROJECTI")
+@Table(name = "USERS", schema = "PROJECTI")
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String firstName;
-	
+
 	@Column(nullable = false)
 	private String lastName;
-	
-	@Column
+
+	@Column(nullable = false)
 	private Status status;
-	
+
 	@Column(nullable = false)
 	private String username;
-	
+
 	@Column(nullable = false)
 	private Long userId;
 	
