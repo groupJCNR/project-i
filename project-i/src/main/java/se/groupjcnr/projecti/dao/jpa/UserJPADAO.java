@@ -16,7 +16,7 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	}
 
 	@Override
-	public User getUserByUserID(Long userId) {
+	public User getUserByUserID(String userId) {
 		return query("User.getUserByUserId", identity()).get(0);
 	}
 
