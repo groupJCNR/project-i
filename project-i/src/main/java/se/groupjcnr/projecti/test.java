@@ -18,7 +18,7 @@ public class test {
 		userDAO.save(u);
 		System.out.println("saved");
 		
-		List<User> users = userDAO.getAllUsers();
+		List<User> users = userDAO.getAll();
 		System.out.println(users.get(0));
 	}
 }
