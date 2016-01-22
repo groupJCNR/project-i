@@ -41,7 +41,8 @@ public class ProjectiResource {
 
 	@POST
 	public Response createUser(User user) {
-		User temp = userDAO.save(user);
+		User temp = new User(user.getFirstName(), user.getLastName(), user.getUsername());
+		userDAO.save(temp);
 		URI location = uriInfo.getAbsolutePathBuilder().path(temp.getUserId()).build();
 		return Response.created(location).build();
 	}
