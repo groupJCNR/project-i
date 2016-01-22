@@ -1,18 +1,19 @@
 package se.groupjcnr.projecti.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "USER", schema = "PROJECTI")
+@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User extends AbstractEntity {
-
-	public enum Status {
-		ACTIVE, INACTIVE
-	}
 
 	@Column(nullable = false)
 	private String firstName;
@@ -20,7 +21,7 @@ public class User extends AbstractEntity {
 	@Column(nullable = false)
 	private String lastName;
 	
-	@Column(nullable = false)
+	@Column
 	private Status status;
 	
 	@Column(nullable = false)
@@ -29,17 +30,28 @@ public class User extends AbstractEntity {
 	@Column(nullable = false)
 	private Long userId;
 	
+	@ManyToMany
 	private List<Team> teams;
+	
+	@OneToMany
 	private List<WorkItem> workItems;
+
+	public enum Status {
+		ACTIVE, INACTIVE
+	}
 
 	protected User() {
 		super();
 	}
 	
-	protected User(String firstName, String lastName, Status status) {
+	public User(String username, String firstName, String lastName) {
+		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.status = status;
+		this.status = Status.ACTIVE;
+		this.userId = 111111L;
+		this.teams = new ArrayList<>();
+		this.workItems = new ArrayList<>();
 	}
 
 	public String getFirstName() {

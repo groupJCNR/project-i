@@ -5,27 +5,33 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name= "TEAM")
+@Table(name= "TEAM", schema = "PROJECTI")
 public class Team extends AbstractEntity {
 	
-	public enum Status{
-        ACTIVE, INACTIVE   
-    };
-   
     @Column(nullable = false)
     private String name;
-    
-    private List<WorkItem> items;
-    private List<User> users;
-    
+
     @Column(nullable = false)
     private Status status;
+
+    @OneToMany
+    private List<WorkItem> items;
+    
+    @ManyToMany
+    private List<User> users;
+    
+	public enum Status{
+        ACTIVE, INACTIVE   
+    }
    
     public Team(String name){
         this.name = name;
+        this.status = Status.ACTIVE;
         this.items = new ArrayList<WorkItem>();
         this.users = new ArrayList<User>();
     }
