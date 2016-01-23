@@ -56,7 +56,7 @@ public class Team extends AbstractEntity {
         this.status = status;
     }
    
-    public List<WorkItem> getItems(){
+    public List<WorkItem> getWorkItems(){
         return items;
     }
    
