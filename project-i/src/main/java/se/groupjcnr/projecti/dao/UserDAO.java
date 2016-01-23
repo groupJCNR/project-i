@@ -8,7 +8,7 @@ import se.groupjcnr.projecti.model.User;
 
 public interface UserDAO extends CrudDAO<User>{
 	
-    User getUserByUserID(Long userId);
+    User getUserByUserID(String userId);
     
     //name söker på username, first + lastName
     User getUserByName(String name);

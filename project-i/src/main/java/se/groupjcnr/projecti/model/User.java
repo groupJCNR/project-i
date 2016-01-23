@@ -2,6 +2,7 @@ package se.groupjcnr.projecti.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +29,7 @@ public class User extends AbstractEntity {
 	private String username;
 
 	@Column(nullable = false)
-	private Long userId;
+	private String userId;
 	
 	@ManyToMany
 	private List<Team> teams;
@@ -49,7 +50,7 @@ public class User extends AbstractEntity {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = Status.ACTIVE;
-		this.userId = 111111L;
+		this.userId = UUID.randomUUID().toString();
 		this.teams = new ArrayList<>();
 		this.workItems = new ArrayList<>();
 	}
@@ -102,11 +103,11 @@ public class User extends AbstractEntity {
 		this.username = username;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 }
