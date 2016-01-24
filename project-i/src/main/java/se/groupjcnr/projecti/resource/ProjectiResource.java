@@ -6,10 +6,12 @@ import java.util.Collection;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -20,36 +22,39 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import se.groupjcnr.projecti.model.User;
-import se.groupjcnr.projecti.resource.dao.IssueDAO;
 import se.groupjcnr.projecti.resource.dao.UserDAO;
-import se.groupjcnr.projecti.resource.dao.jpa.IssueJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 
-@Path("/board")
+@Path("i")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProjectiResource {
 
 	private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("PI");
 	private static final UserDAO userDAO = new UserJPADAO(factory);
-	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
+//	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
 
-	static {
-		User user = userDAO.save(new User("test", "user", "testuser"));
-	}
-	
 	@Context
 	private UriInfo uriInfo;
+	
 	@Context 
 	private HttpHeaders headers;
 	
 	@GET
-	public Response getUsers(@HeaderParam("api-key")String apiKey) {
-		if (apiKey == null) {
-			return Response.status(Status.BAD_REQUEST).build();
-		}
+	public Response getUsers() {
 		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {};
 		return Response.ok(result).build();
+	}
+	
+	@GET
+	@Path("{id}")
+	public Response getUserById(@PathParam("id")String id) {
+		
+		if (userDAO.findById(Long.parseLong(id)) != null) {
+			return Response.ok(userDAO.findById(Long.parseLong(id))).build();
+		}
+		
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@POST
@@ -74,19 +79,19 @@ public class ProjectiResource {
 //		return null;
 //	}
 
-//	@PUT
-//	public User updateUser(User user) {
-//		//fulkod, metod för att ändra/ersätta user borde finnas, men var bör den ligga?
-//		userDAO.getUserByUserID(user.getUserId()).setFirstName(user.getFirstName());
-//		userDAO.getUserByUserID(user.getUserId()).setLastName(user.getLastName());
-//		userDAO.getUserByUserID(user.getUserId()).setUsername(user.getUsername());
-//		userDAO.getUserByUserID(user.getUserId()).setTeams(user.getTeams());
-//		userDAO.getUserByUserID(user.getUserId()).setWorkItems(user.getWorkItems());
-//		userDAO.getUserByUserID(user.getUserId()).setStatus(user.getStatus());
-//		
-//		return userDAO.getUserByUserID(user.getUserId());
-//	}
-//
+	@PUT
+	public User updateUser(User user) {
+		//fulkod, metod för att ändra/ersätta user borde finnas, men var bör den ligga?
+		userDAO.getUserByUserID(user.getUserId()).setFirstName(user.getFirstName());
+		userDAO.getUserByUserID(user.getUserId()).setLastName(user.getLastName());
+		userDAO.getUserByUserID(user.getUserId()).setUsername(user.getUsername());
+		userDAO.getUserByUserID(user.getUserId()).setTeams(user.getTeams());
+		userDAO.getUserByUserID(user.getUserId()).setWorkItems(user.getWorkItems());
+		userDAO.getUserByUserID(user.getUserId()).setStatus(user.getStatus());
+		
+		return userDAO.getUserByUserID(user.getUserId());
+	}
+
 //	@PUT
 //	public Team updateTeam(Team team) {
 //		return null;
@@ -97,14 +102,14 @@ public class ProjectiResource {
 //		return null;
 //	}
 
-//	@DELETE
-//	public Response deactivateUser(User user) {
-//		userDAO.getUserByUserID(user.getUserId()).setStatus(Status.INACTIVE);
-//		if(userDAO.getUserByUserID(user.getUserId()).equals(Status.INACTIVE)){
-//			return Response.accepted().build();
-//		}
-//		return Response.status(417).build();
-//	}
+	@DELETE
+	public Response deactivateUser(User user) {
+		userDAO.getUserByUserID(user.getUserId()).setStatus(User.Status.INACTIVE);
+		if(userDAO.getUserByUserID(user.getUserId()).equals(User.Status.INACTIVE)){
+			return Response.accepted().build();
+		}
+		return Response.status(417).build();
+	}
 
 //	@DELETE
 //	public Response deactivateTeam(Team team) {
