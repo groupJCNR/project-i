@@ -25,11 +25,18 @@ public class Issue extends AbstractEntity {
 	protected Issue() {
 		super();
 	}
-	
+
 	public Issue(String title, WorkItem workItem) {
 		this.title = title;
 		this.workItem = workItem;
-		this.status = status.UNRESOLVED;
+		this.status = Status.UNRESOLVED;
+	}
+
+	public Issue(Long id, String title, WorkItem workItem, Status status) {
+		this.setId(id);
+		this.title = title;
+		this.workItem = workItem;
+		this.status = status;
 	}
 
 	public String getTitle() {

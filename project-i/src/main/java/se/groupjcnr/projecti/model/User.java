@@ -30,10 +30,10 @@ public class User extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String userId;
-	
+
 	@ManyToMany
 	private List<Team> teams;
-	
+
 	@OneToMany
 	private List<WorkItem> workItems;
 	
@@ -44,7 +44,7 @@ public class User extends AbstractEntity {
 	protected User() {
 		super();
 	}
-	
+
 	public User(String username, String firstName, String lastName) {
 		this.username = username;
 		this.firstName = firstName;
@@ -53,6 +53,18 @@ public class User extends AbstractEntity {
 		this.userId = UUID.randomUUID().toString();
 		this.teams = new ArrayList<>();
 		this.workItems = new ArrayList<>();
+	}
+
+	public User(Long id, String firstName, String lastName, Status status, String username, String userId,
+			List<Team> teams, List<WorkItem> workItems) {
+		this.setId(id);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.status = status;
+		this.username = username;
+		this.userId = userId;
+		this.teams = teams;
+		this.workItems = workItems;
 	}
 
 	public String getFirstName() {

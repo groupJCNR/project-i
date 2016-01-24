@@ -28,6 +28,10 @@ public class Team extends AbstractEntity {
 	public enum Status{
         ACTIVE, INACTIVE   
     }
+
+    protected Team() {
+    	super();
+    }
    
     public Team(String name){
         this.name = name;
@@ -36,11 +40,15 @@ public class Team extends AbstractEntity {
         this.users = new ArrayList<User>();
     }
     
-    protected Team() {
-    	super();
-    }
-   
-    public String getName(){
+    public Team(Long id, String name, Status status, List<WorkItem> items, List<User> users) {
+		this.setId(id);
+		this.name = name;
+		this.status = status;
+		this.items = items;
+		this.users = users;
+	}
+
+	public String getName(){
         return name;
     }
    

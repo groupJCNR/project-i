@@ -7,10 +7,8 @@
 	<artifactId>project-i</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>project-i</name>
 
 	<build>
-		<finalName>project-i</finalName>
 
 		<plugins>
 			<plugin>

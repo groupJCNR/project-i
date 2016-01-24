@@ -2,7 +2,9 @@ package se.groupjcnr.projecti.mapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -17,6 +19,7 @@ import javax.ws.rs.ext.Provider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 
 import se.groupjcnr.projecti.model.User;
 
@@ -25,36 +28,36 @@ import se.groupjcnr.projecti.model.User;
 @Consumes(MediaType.APPLICATION_JSON)
 public final class UserMapper implements MessageBodyReader<User>, MessageBodyWriter<User> {
 
-//	private static final Gson gson = new GsonBuilder().r
-	
+	private static final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create();
+
 	@Override
 	public boolean isReadable(Class<?> type, Type genericType, 
 			Annotation[] annotations, MediaType mediaType) {
-		return false;
+		return type.isAssignableFrom(User.class);
 	}
 
 	@Override
 	public boolean isWriteable(Class<?> type, Type genericType, 
 			Annotation[] annotations, MediaType mediaType) {
-		return false;
+		return type.isAssignableFrom(User.class);
 	}
 
 	@Override
 	public User readFrom(Class<User> type, Type genericType, 
 			Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, String> httpHeaders, 
-			InputStream entityStream)
+			MultivaluedMap<String, String> httpHeaders, InputStream in) 
 					throws IOException, WebApplicationException {
-		return null;
+		return gson.fromJson(new InputStreamReader(in), type);
 	}
 
 	@Override
-	public void writeTo(User t, Class<?> type, Type genericType, 
+	public void writeTo(User user, Class<?> type, Type genericType, 
 			Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, Object> httpHeaders, 
-			OutputStream entityStream)
+			MultivaluedMap<String, Object> httpHeaders, OutputStream out) 
 					throws IOException, WebApplicationException {
-		
+		try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out))) {
+			gson.toJson(user, User.class, writer);
+		}
 	}
 
 	@Override
