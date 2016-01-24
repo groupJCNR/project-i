@@ -37,16 +37,28 @@ public class WorkItem extends AbstractEntity {
 	public enum Status {
 		OPEN, ASSIGNED, DOING, DONE, REMOVED
 	}
-	
+
+	protected WorkItem() {
+		super();
+	}
+
 	public WorkItem(String title, String description) {
 		this.title = title;
 		this.description = description;
 		this.issues = new ArrayList<>();
-		this.status = status.OPEN;
+		this.status = Status.OPEN;
 	}
 
-	protected WorkItem() {
-		super();
+	public WorkItem(Long id, String title, String description, int priority, List<Issue> issues, User user, Team team,
+			Status status) {
+		this.setId(id);
+		this.title = title;
+		this.description = description;
+		this.priority = priority;
+		this.issues = issues;
+		this.user = user;
+		this.team = team;
+		this.status = status;
 	}
 
 	public String getTitle() {
