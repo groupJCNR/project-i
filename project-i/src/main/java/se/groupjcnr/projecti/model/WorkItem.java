@@ -5,25 +5,33 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "WORKITEM")
+@Table(name = "WORKITEM", schema = "PROJECTI")
 public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String title;
-	
-	@Lob
-	@Column(columnDefinition="CLOB NOT NULL")
+
+	@Column(nullable = false)
 	private String description;
-	
+
 	@Column(nullable = false)
 	private int priority;
-	
+
+	@OneToMany
 	private List<Issue> issues;
-	
+
+	@ManyToOne
+	private User user;
+
+	@ManyToOne
+	private Team team;
+
+	@Column(nullable = false)
 	private Status status;
 	
 	public enum Status {
@@ -79,6 +87,22 @@ public class WorkItem extends AbstractEntity {
 
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 
 }

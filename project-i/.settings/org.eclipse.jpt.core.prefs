@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+<<<<<<< HEAD
+org.eclipse.jpt.core.platform=eclipselink2_5
+org.eclipse.jpt.jpa.core.discoverAnnotatedClasses=false
+=======
+entitygen.DEFAULT_PACKAGE=model
+org.eclipse.jpt.core.platform=eclipselink2_5
+>>>>>>> refs/remotes/origin/master

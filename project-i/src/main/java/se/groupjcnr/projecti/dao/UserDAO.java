@@ -8,14 +8,14 @@ import se.groupjcnr.projecti.model.User;
 
 public interface UserDAO extends CrudDAO<User>{
 	
-    User getUserByUserID(Long userId);
+    User getUserByUserID(String userId);
     
     //name söker på username, first + lastName
     User getUserByName(String name);
     
     List<User> getUserByTeam(Team team);
 
-    List<User> getAllUsers();
+    List<User> getAll();
     
     
 }

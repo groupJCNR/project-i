@@ -1,10 +1,14 @@
 package se.groupjcnr.projecti.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,20 +18,23 @@ public class User extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String firstName;
-	
+
 	@Column(nullable = false)
 	private String lastName;
-	
+
 	@Column(nullable = false)
 	private Status status;
-	
+
 	@Column(nullable = false)
 	private String username;
-	
+
 	@Column(nullable = false)
-	private Long userId;
+	private String userId;
 	
+	@ManyToMany
 	private List<Team> teams;
+	
+	@OneToMany
 	private List<WorkItem> workItems;
 	
 	public enum Status {
@@ -38,10 +45,14 @@ public class User extends AbstractEntity {
 		super();
 	}
 	
-	protected User(String firstName, String lastName, Status status) {
+	public User(String username, String firstName, String lastName) {
+		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.status = status;
+		this.status = Status.ACTIVE;
+		this.userId = UUID.randomUUID().toString();
+		this.teams = new ArrayList<>();
+		this.workItems = new ArrayList<>();
 	}
 
 	public String getFirstName() {
@@ -92,11 +103,11 @@ public class User extends AbstractEntity {
 		this.username = username;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 }

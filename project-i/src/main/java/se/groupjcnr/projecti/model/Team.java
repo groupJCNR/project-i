@@ -5,23 +5,33 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name= "TEAM", schema = "PROJECTI")
 public class Team extends AbstractEntity {
-	
+
+	@Column(nullable = false)
+    private String name;
+
+	@Column(nullable = false)
+    private Status status;
+
+	@OneToMany
+    private List<WorkItem> items;
+
+	@ManyToMany
+    private List<User> users;
+    
 	public enum Status{
         ACTIVE, INACTIVE   
-    };
-   
-    @Column(nullable = false)
-    private String name;
-    
-    private List<WorkItem> items;
-    private List<User> users;
-    private Status status;
+    }
    
     public Team(String name){
         this.name = name;
+        this.status = Status.ACTIVE;
         this.items = new ArrayList<WorkItem>();
         this.users = new ArrayList<User>();
     }
@@ -46,7 +56,7 @@ public class Team extends AbstractEntity {
         this.status = status;
     }
    
-    public List<WorkItem> getItems(){
+    public List<WorkItem> getWorkItems(){
         return items;
     }
    

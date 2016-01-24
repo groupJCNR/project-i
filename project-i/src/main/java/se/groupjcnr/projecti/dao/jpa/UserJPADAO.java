@@ -11,12 +11,12 @@ import static java.util.function.Function.identity;
 
 public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 
-	protected UserJPADAO(EntityManagerFactory factory) {
+	public UserJPADAO(EntityManagerFactory factory) {
 		super(User.class, factory);
 	}
 
 	@Override
-	public User getUserByUserID(Long userId) {
+	public User getUserByUserID(String userId) {
 		return query("User.getUserByUserId", identity()).get(0);
 	}
 
@@ -31,8 +31,8 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<User> getAllUsers() {
-		return query("User.getAllUsers", identity());
+	public List<User> getAll() {
+		return query("User.getAll", identity());
 	}
 
 }
