@@ -36,6 +36,10 @@ public class ProjectiResource {
 	private static final UserDAO userDAO = new UserJPADAO(factory);
 	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
 
+	static {
+		User user = userDAO.save(new User("test", "user", "testuser"));
+	}
+	
 	@Context
 	private UriInfo uriInfo;
 
