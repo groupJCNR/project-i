@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER", schema ="PROJECTI")
+@Table(name = "USERS", schema = "PROJECTI")
+@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User extends AbstractEntity {
 
 	@Column(nullable = false)
