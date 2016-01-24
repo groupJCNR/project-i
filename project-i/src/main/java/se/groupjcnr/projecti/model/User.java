@@ -7,12 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "USER", schema ="PROJECTI")
 public class User extends AbstractEntity {
-
-	public enum Status {
-		ACTIVE, INACTIVE
-	}
 
 	@Column(nullable = false)
 	private String firstName;
@@ -31,6 +27,10 @@ public class User extends AbstractEntity {
 	
 	private List<Team> teams;
 	private List<WorkItem> workItems;
+	
+	public enum Status {
+		ACTIVE, INACTIVE
+	}
 
 	protected User() {
 		super();
