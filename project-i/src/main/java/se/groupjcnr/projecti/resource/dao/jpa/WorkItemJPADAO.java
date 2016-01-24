@@ -1,11 +1,12 @@
-package se.groupjcnr.projecti.dao.jpa;
+package se.groupjcnr.projecti.resource.dao.jpa;
 
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
-import se.groupjcnr.projecti.dao.WorkItemDAO;
 import se.groupjcnr.projecti.model.WorkItem;
+import se.groupjcnr.projecti.resource.dao.WorkItemDAO;
+
 import static java.util.function.Function.identity;
 
 public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItemDAO {

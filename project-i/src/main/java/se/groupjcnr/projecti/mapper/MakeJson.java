@@ -108,6 +108,14 @@ public final class MakeJson {
 
 	public static User jsonToUser(JsonObject json) throws JsonParseException {
 
+		if (json.get("id") == null) {
+			String username = json.get("username").getAsString();
+			String firstName = json.get("firstname").getAsString();
+			String lastName = json.get("lastname").getAsString();
+			
+			return new User(username, firstName, lastName);
+		}
+		
 		Long id = json.get("id").getAsLong();
 		String firstName = json.get("firstname").getAsString();
 		String lastName = json.get("lastname").getAsString();
