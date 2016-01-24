@@ -1,12 +1,13 @@
-package se.groupjcnr.projecti.dao.jpa;
+package se.groupjcnr.projecti.resource.dao.jpa;
 
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
-import se.groupjcnr.projecti.dao.UserDAO;
 import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
+import se.groupjcnr.projecti.resource.dao.UserDAO;
+
 import static java.util.function.Function.identity;
 
 public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {

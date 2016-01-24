@@ -1,4 +1,4 @@
-package se.groupjcnr.projecti.dao;
+package se.groupjcnr.projecti.resource.dao;
 
 import se.groupjcnr.projecti.model.Issue;
 

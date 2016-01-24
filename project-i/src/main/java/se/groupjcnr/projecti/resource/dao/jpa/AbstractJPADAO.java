@@ -1,4 +1,4 @@
-package se.groupjcnr.projecti.dao.jpa;
+package se.groupjcnr.projecti.resource.dao.jpa;
 
 import java.util.List;
 import java.util.function.Function;
@@ -7,8 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
-import se.groupjcnr.projecti.dao.CrudDAO;
 import se.groupjcnr.projecti.model.AbstractEntity;
+import se.groupjcnr.projecti.resource.dao.CrudDAO;
 
 public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudDAO<E> {
 	
