@@ -28,7 +28,7 @@ import se.groupjcnr.projecti.model.User;
 import se.groupjcnr.projecti.model.User.Status;
 import se.groupjcnr.projecti.model.WorkItem;
 
-@Path("project-i")
+@Path("board")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProjectiResource {
@@ -52,9 +52,8 @@ public class ProjectiResource {
 
 	@POST
 	public Response createUser(User user) {
-		User temp = new User(user.getFirstName(), user.getLastName(), user.getUsername());
-		userDAO.save(temp);
-		URI location = uriInfo.getAbsolutePathBuilder().path(temp.getUserId()).build();
+		user = userDAO.save(user);
+		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
 		return Response.created(location).build();
 	}
 
