@@ -21,17 +21,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.Issue;
 
-import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
+import se.groupjcnr.projecti.resource.dao.TeamDAO;
 import se.groupjcnr.projecti.model.WorkItem;
 import se.groupjcnr.projecti.resource.dao.IssueDAO;
-import se.groupjcnr.projecti.resource.dao.TeamDAO;
 import se.groupjcnr.projecti.resource.dao.UserDAO;
+import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.WorkItemDAO;
 import se.groupjcnr.projecti.resource.dao.jpa.IssueJPADAO;
-import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.WorkItemJPADAO;
 
@@ -42,9 +42,9 @@ public class ProjectiResource {
 
 	private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("PI");
 	private static final UserDAO userDAO = new UserJPADAO(factory);
+	private static final TeamDAO teamDAO = new TeamJPADAO(factory);
 	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
 	private static final WorkItemDAO workItemDAO = new WorkItemJPADAO(factory);
-	private static final TeamDAO teamDAO = new TeamJPADAO(factory);
 
 	@Context
 	private UriInfo uriInfo;
@@ -79,12 +79,6 @@ public class ProjectiResource {
 		return Response.created(location).build();
 	}
 
-	// @POST
-	// public Response createTeam(Team team) {
-	// return null;
-	// }
-	//
-
 	@GET
 	@Path("workitem")
 	public Response getWorkItems() {
@@ -93,6 +87,14 @@ public class ProjectiResource {
 		System.out.println("created this thing: "+result.toString());
 		return Response.ok(result).build();
 	}
+	
+	@POST
+	public Response createTeam(Team team) {
+		team = teamDAO.save(team);
+		URI location = uriInfo.getAbsolutePathBuilder().path(team.getId().toString()).build();
+		return Response.created(location).build();
+	}
+	
 	
 	@GET
 	@Path("workitem/{id}")
@@ -124,8 +126,10 @@ public class ProjectiResource {
 	}
 
 	@POST
-	@Path("issue")
-	public Response createIssue(Issue issue) {
+	@Path("workitem/{id}/issue")
+	public Response createIssue(@PathParam("id") Long id, Issue issue) {
+		WorkItem workItem = workItemDAO.findById(id);
+		issue = issue.setWorkItem(workItem);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -135,6 +139,7 @@ public class ProjectiResource {
 	@Path("user/{id}")
 	public User updateUser(@PathParam("id") Long id, User user) {
 		User temp = userDAO.findById(id);
+
 		temp.setFirstName(user.getFirstName());
 		temp.setLastName(user.getLastName());
 		temp.setUsername(user.getUsername());
@@ -146,15 +151,29 @@ public class ProjectiResource {
 		return userDAO.findById(id);
 	}
 
-	// @PUT
-	// public Team updateTeam(Team team) {
-	// return null;
-	// }
-	//
-	// @PUT
-	// public Issue updateIssue(Issue issue) {
-	// return null;
-	// }
+	@PUT
+	@Path("issue/{id}")
+	public Issue updateIssue(@PathParam("id") Long id, Issue issue) {
+		Issue temp = issueDAO.findById(id);
+		temp.setTitle(issue.getTitle());
+		temp.setWorkItem(issue.getWorkItem());
+		temp.setStatus(issue.getStatus());
+
+		return issueDAO.save(temp);
+	}
+
+	@PUT
+	@Path("team/{id}")
+	public Team updateTeam(@PathParam("id") Long id, Team team) {
+		Team temp = teamDAO.findById(id);
+		temp.setName(team.getName());
+		temp.setItemList(team.getWorkItems());
+		temp.setUserList(team.getUsers());
+		temp.setStatus(team.getStatus());
+		teamDAO.save(temp);
+
+		return teamDAO.findById(id);
+	}
 
 	@DELETE
 	@Path("user/{id}")
@@ -173,6 +192,7 @@ public class ProjectiResource {
 	public Response deactivateTeam(@PathParam("id") Long id) {
 		Team temp = teamDAO.findById(id);
 		temp.setStatus(Team.Status.REMOVED);
+
 		teamDAO.save(temp);
 		if (teamDAO.findById(id).getStatus().equals(Team.Status.REMOVED)) {
 			return Response.accepted().build();
@@ -195,12 +215,13 @@ public class ProjectiResource {
 	@DELETE
 	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
-//		Issue temp = issueDAO.findById(id);
-//		temp.setStatus(Issue.Status.REMOVED);
-//		issueDAO.save(temp);
-//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-//			return Response.accepted().build();
-//		}
+
+		Issue temp = issueDAO.findById(id);
+		temp.setStatus(Issue.Status.REMOVED);
+		issueDAO.save(temp);
+		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
+			return Response.accepted().build();
+		}
 		return Response.status(417).build();
 	}
 
