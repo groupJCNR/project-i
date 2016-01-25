@@ -115,8 +115,10 @@ public class ProjectiResource {
 	}
 	
 	@POST
-	@Path("issue")
-	public Response createIssue(Issue issue) {
+	@Path("workitem/{id}/issue")
+	public Response createIssue(@PathParam("id") Long id, Issue issue) {
+		WorkItem workItem = workItemDAO.findById(id);
+		issue = issue.setWorkItem(workItem);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -143,10 +145,16 @@ public class ProjectiResource {
 //		return null;
 //	}
 //
-//	@PUT
-//	public Issue updateIssue(Issue issue) {
-//		return null;
-//	}
+	@PUT
+	@Path("issue/{id}")
+	public Issue updateIssue(@PathParam("id")Long id, Issue issue) {
+		Issue temp = issueDAO.findById(id);
+		temp.setTitle(issue.getTitle());
+		temp.setWorkItem(issue.getWorkItem());
+		temp.setStatus(issue.getStatus());
+
+		return issueDAO.save(temp);
+	}
 
 	@DELETE
 	@Path("user/{id}")
