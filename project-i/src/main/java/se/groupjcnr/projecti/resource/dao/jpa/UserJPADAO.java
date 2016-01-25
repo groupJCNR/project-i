@@ -17,23 +17,33 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	}
 
 	@Override
+	public List<User> getAll() {
+		return query("User.getAll", identity());
+	}
+
+	@Override
+	public User getUserByFirstName(String firstName) {
+		return query("User.getUserByFirstName", identity()).get(0);
+	}
+
+	@Override
+	public User getUserByLastName(String lastName) {
+		return query("User.getUserByLastName", identity()).get(0);
+	}
+
+	@Override
+	public User getUserByusername(String username) {
+		return query("User.getUserByUsername", identity()).get(0);
+	}
+
+	@Override
 	public User getUserByUserID(String userId) {
 		return query("User.getUserByUserId", identity()).get(0);
 	}
 
 	@Override
-	public User getUserByName(String name) {
-		return query("User.getUserByName", identity()).get(0);
-	}
-
-	@Override
 	public List<User> getUserByTeam(Team team) {
 		return query("User.getUserByTeam", identity());
-	}
-
-	@Override
-	public List<User> getAll() {
-		return query("User.getAll", identity());
 	}
 
 }

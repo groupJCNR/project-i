@@ -7,13 +7,19 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "USERS", schema = "PROJECTI")
-@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
+@NamedQueries(value = { 
+		@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u"),
+		@NamedQuery(name = "User.getUserByFirstName", query = "SELECT u FROM User u WHERE u.firstName =:firstName"),
+		@NamedQuery(name = "User.getUserByLastName", query = "SELECT u FROM User u WHERE u.lastName =:lastName"),
+		@NamedQuery(name = "User.getUserByUsername", query = "SELECT u FROM User u WHERE u.username =:username"),
+		@NamedQuery(name = "User.getUserByUserId", query = "SELECT u FROM User u WHERE u.userId =:userId")})
 public class User extends AbstractEntity {
 
 	@Column(nullable = false)
@@ -36,7 +42,7 @@ public class User extends AbstractEntity {
 
 	@OneToMany
 	private List<WorkItem> workItems;
-	
+
 	public enum Status {
 		ACTIVE, INACTIVE, REMOVED
 	}
