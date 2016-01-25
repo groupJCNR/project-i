@@ -19,7 +19,7 @@ public class Issue extends AbstractEntity {
 	private Status status;
 	
 	public enum Status {
-		RESOLVED, UNRESOLVED;
+		RESOLVED, UNRESOLVED, REMOVED;
 	}
 
 	protected Issue() {
