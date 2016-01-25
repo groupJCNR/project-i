@@ -2,6 +2,7 @@ package se.groupjcnr.projecti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -11,9 +12,9 @@ public class Issue extends AbstractEntity {
 	@Column(nullable = false)
 	private String title;
 	
-	@Column(nullable = false)
+	@ManyToOne
 	private WorkItem workItem;
-	
+
 	@Column(nullable = false)
 	private Status status;
 	
@@ -24,11 +25,18 @@ public class Issue extends AbstractEntity {
 	protected Issue() {
 		super();
 	}
-	
+
 	public Issue(String title, WorkItem workItem) {
 		this.title = title;
 		this.workItem = workItem;
-		this.status = status.UNRESOLVED;
+		this.status = Status.UNRESOLVED;
+	}
+
+	public Issue(Long id, String title, WorkItem workItem, Status status) {
+		this.setId(id);
+		this.title = title;
+		this.workItem = workItem;
+		this.status = status;
 	}
 
 	public String getTitle() {

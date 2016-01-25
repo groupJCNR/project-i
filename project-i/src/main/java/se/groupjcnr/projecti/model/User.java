@@ -1,45 +1,70 @@
 package se.groupjcnr.projecti.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "USERS", schema = "PROJECTI")
+@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 public class User extends AbstractEntity {
 
+	@Column(nullable = false)
+	private String firstName;
+
+	@Column(nullable = false)
+	private String lastName;
+
+	@Column(nullable = false)
+	private Status status;
+
+	@Column(nullable = false)
+	private String username;
+
+	@Column(nullable = false)
+	private String userId;
+
+	@ManyToMany
+	private List<Team> teams;
+
+	@OneToMany
+	private List<WorkItem> workItems;
+	
 	public enum Status {
 		ACTIVE, INACTIVE
 	}
 
-	@Column(nullable = false)
-	private String firstName;
-	
-	@Column(nullable = false)
-	private String lastName;
-	
-	@Column(nullable = false)
-	private Status status;
-	
-	@Column(nullable = false)
-	private String username;
-	
-	@Column(nullable = false)
-	private Long userId;
-	
-	private List<Team> teams;
-	private List<WorkItem> workItems;
-
 	protected User() {
 		super();
 	}
-	
-	protected User(String firstName, String lastName, Status status) {
+
+	public User(String username, String firstName, String lastName) {
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.status = Status.ACTIVE;
+		this.userId = UUID.randomUUID().toString();
+		this.teams = new ArrayList<>();
+		this.workItems = new ArrayList<>();
+	}
+
+	public User(Long id, String firstName, String lastName, Status status, String username, String userId,
+			List<Team> teams, List<WorkItem> workItems) {
+		this.setId(id);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = status;
+		this.username = username;
+		this.userId = userId;
+		this.teams = teams;
+		this.workItems = workItems;
 	}
 
 	public String getFirstName() {
@@ -90,11 +115,11 @@ public class User extends AbstractEntity {
 		this.username = username;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 }

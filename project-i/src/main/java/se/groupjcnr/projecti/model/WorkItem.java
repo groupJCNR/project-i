@@ -5,40 +5,60 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "WORKITEM")
+@Table(name = "WORKITEM", schema = "PROJECTI")
 public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String title;
-	
-	@Lob
-	@Column(columnDefinition="CLOB NOT NULL")
+
+	@Column(nullable = false)
 	private String description;
-	
+
 	@Column(nullable = false)
 	private int priority;
-	
+
+	@OneToMany
 	private List<Issue> issues;
-	
+
+	@ManyToOne
+	private User user;
+
+	@ManyToOne
+	private Team team;
+
+	@Column(nullable = false)
 	private Status status;
 	
 	public enum Status {
 		OPEN, ASSIGNED, DOING, DONE, REMOVED
 	}
-	
+
+	protected WorkItem() {
+		super();
+	}
+
 	public WorkItem(String title, String description) {
 		this.title = title;
 		this.description = description;
 		this.issues = new ArrayList<>();
-		this.status = status.OPEN;
+		this.status = Status.OPEN;
 	}
 
-	protected WorkItem() {
-		super();
+	public WorkItem(Long id, String title, String description, int priority, List<Issue> issues, User user, Team team,
+			Status status) {
+		this.setId(id);
+		this.title = title;
+		this.description = description;
+		this.priority = priority;
+		this.issues = issues;
+		this.user = user;
+		this.team = team;
+		this.status = status;
 	}
 
 	public String getTitle() {
@@ -79,6 +99,22 @@ public class WorkItem extends AbstractEntity {
 
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 
 }
