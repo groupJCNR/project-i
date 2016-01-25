@@ -11,7 +11,7 @@ import static java.util.function.Function.identity;
 
 public class TeamJPADAO  extends AbstractJPADAO<Team> implements TeamDAO {
 
-	protected TeamJPADAO(EntityManagerFactory factory) {
+	public TeamJPADAO(EntityManagerFactory factory) {
 		super(Team.class, factory);
 	}
 
