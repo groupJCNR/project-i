@@ -84,18 +84,18 @@ public class ProjectiResource {
 	public Response getWorkItems() {
 		System.out.println("arrived inside getWorkItems");
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
-		System.out.println("created this thing: "+result.toString());
+		System.out.println("created this thing: " + result.toString());
 		return Response.ok(result).build();
 	}
-	
+
 	@POST
+	@Path("team")
 	public Response createTeam(Team team) {
 		team = teamDAO.save(team);
 		URI location = uriInfo.getAbsolutePathBuilder().path(team.getId().toString()).build();
 		return Response.created(location).build();
 	}
-	
-	
+
 	@GET
 	@Path("workitem/{id}")
 	public Response getWorkItem(@PathParam("id") String id) {
