@@ -29,4 +29,9 @@ public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItem
 	public List<WorkItem> getItemByUser() {
 		return query("WorkItem.getItemByUser", identity());
 	}
+
+	@Override
+	public List<WorkItem> getAll() {
+		return query("WorkItem.getAll", identity());
+	}
 }

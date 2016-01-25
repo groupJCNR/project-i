@@ -6,11 +6,13 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "WORKITEM", schema = "PROJECTI")
+@NamedQuery(name = "WorkItem.getAll", query = "SELECT w FROM WorkItem w")
 public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
