@@ -79,14 +79,23 @@ public class ProjectiResource {
 		return Response.created(location).build();
 	}
 
+	@GET
+	@Path("workitem")
+	public Response getWorkItems() {
+		System.out.println("arrived inside getWorkItems");
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
+		System.out.println("created this thing: "+result.toString());
+		return Response.ok(result).build();
+	}
+	
 	@POST
 	public Response createTeam(Team team) {
 		team = teamDAO.save(team);
 		URI location = uriInfo.getAbsolutePathBuilder().path(team.getId().toString()).build();
 		return Response.created(location).build();
 	}
-	//
-
+	
+	
 	@GET
 	@Path("workitem/{id}")
 	public Response getWorkItem(@PathParam("id") String id) {
@@ -130,8 +139,7 @@ public class ProjectiResource {
 	@Path("user/{id}")
 	public User updateUser(@PathParam("id") Long id, User user) {
 		User temp = userDAO.findById(id);
-		// fulkod, metod för att ändra/ersätta user borde finnas, men var bör
-		// den ligga?
+
 		temp.setFirstName(user.getFirstName());
 		temp.setLastName(user.getLastName());
 		temp.setUsername(user.getUsername());
@@ -183,7 +191,8 @@ public class ProjectiResource {
 	@Path("team/{id}")
 	public Response deactivateTeam(@PathParam("id") Long id) {
 		Team temp = teamDAO.findById(id);
-		temp.setStatus(Team.Status.REMOVED); // FIX RIS
+		temp.setStatus(Team.Status.REMOVED);
+
 		teamDAO.save(temp);
 		if (teamDAO.findById(id).getStatus().equals(Team.Status.REMOVED)) {
 			return Response.accepted().build();
@@ -204,7 +213,9 @@ public class ProjectiResource {
 	}
 
 	@DELETE
+	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
+
 		Issue temp = issueDAO.findById(id);
 		temp.setStatus(Issue.Status.REMOVED);
 		issueDAO.save(temp);
