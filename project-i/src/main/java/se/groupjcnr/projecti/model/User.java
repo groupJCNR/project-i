@@ -38,7 +38,7 @@ public class User extends AbstractEntity {
 	private List<WorkItem> workItems;
 	
 	public enum Status {
-		ACTIVE, INACTIVE
+		ACTIVE, INACTIVE, REMOVED
 	}
 
 	protected User() {

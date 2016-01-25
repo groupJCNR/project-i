@@ -26,7 +26,7 @@ public class Team extends AbstractEntity {
     private List<User> users;
     
 	public enum Status{
-        ACTIVE, INACTIVE   
+        ACTIVE, INACTIVE, REMOVED  
     }
 
     protected Team() {
