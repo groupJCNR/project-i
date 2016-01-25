@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import se.groupjcnr.projecti.model.Issue;
+
 import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
 import se.groupjcnr.projecti.model.WorkItem;
@@ -82,15 +83,44 @@ public class ProjectiResource {
 //		return null;
 //	}
 //
-//	@POST
-//	public Response createWorkItem(WorkItem workItem) {
-//		return null;
-//	}
-//
-//	@POST
-//	public Response createIssue(Issue issue) {
-//		return null;
-//	}
+	
+	@GET
+	@Path("workitem/{id}")
+	public Response getWorkItem(@PathParam("id")String id) {
+		
+		if (workItemDAO.findById(Long.parseLong(id)) != null) {
+			return Response.ok(workItemDAO.findById(Long.parseLong(id))).build();
+		}
+		
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("workitem")
+	public Response createWorkItem(WorkItem workItem) {
+		workItem = workItemDAO.save(workItem);
+		URI location = uriInfo.getAbsolutePathBuilder().path(workItem.getId().toString()).build();
+		return Response.created(location).build();
+	}
+
+	
+	@GET
+	@Path("issue/{id}")
+	public Response getIssueById(@PathParam("id") String id) {
+		
+		if(issueDAO.findById(Long.parseLong(id)) != null) {
+			return Response.ok(issueDAO.findById(Long.parseLong(id))).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("issue")
+	public Response createIssue(Issue issue) {
+		issue = issueDAO.save(issue);
+		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
+		return Response.created(location).build();
+	}
 
 	@PUT
 	@Path("user/{id}")
