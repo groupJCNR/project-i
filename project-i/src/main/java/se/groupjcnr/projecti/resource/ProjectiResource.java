@@ -21,9 +21,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import se.groupjcnr.projecti.model.Issue;
 import se.groupjcnr.projecti.model.User;
+import se.groupjcnr.projecti.model.WorkItem;
+import se.groupjcnr.projecti.resource.dao.IssueDAO;
 import se.groupjcnr.projecti.resource.dao.UserDAO;
+import se.groupjcnr.projecti.resource.dao.WorkItemDAO;
+import se.groupjcnr.projecti.resource.dao.jpa.IssueJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
+import se.groupjcnr.projecti.resource.dao.jpa.WorkItemJPADAO;
 
 @Path("i")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,7 +38,8 @@ public class ProjectiResource {
 
 	private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("PI");
 	private static final UserDAO userDAO = new UserJPADAO(factory);
-//	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
+	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
+	private static final WorkItemDAO workItemDAO = new WorkItemJPADAO(factory);
 
 	@Context
 	private UriInfo uriInfo;
@@ -69,15 +76,44 @@ public class ProjectiResource {
 //		return null;
 //	}
 //
-//	@POST
-//	public Response createWorkItem(WorkItem workItem) {
-//		return null;
-//	}
-//
-//	@POST
-//	public Response createIssue(Issue issue) {
-//		return null;
-//	}
+	
+	@GET
+	@Path("workitem/{id}")
+	public Response getWorkItem(@PathParam("id")String id) {
+		
+		if (workItemDAO.findById(Long.parseLong(id)) != null) {
+			return Response.ok(workItemDAO.findById(Long.parseLong(id))).build();
+		}
+		
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("workitem")
+	public Response createWorkItem(WorkItem workItem) {
+		workItem = workItemDAO.save(workItem);
+		URI location = uriInfo.getAbsolutePathBuilder().path(workItem.getId().toString()).build();
+		return Response.created(location).build();
+	}
+
+	
+	@GET
+	@Path("issue/{id}")
+	public Response getIssueById(@PathParam("id") String id) {
+		
+		if(issueDAO.findById(Long.parseLong(id)) != null) {
+			return Response.ok(issueDAO.findById(Long.parseLong(id))).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("issue")
+	public Response createIssue(Issue issue) {
+		issue = issueDAO.save(issue);
+		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
+		return Response.created(location).build();
+	}
 
 	@PUT
 	public User updateUser(User user) {
