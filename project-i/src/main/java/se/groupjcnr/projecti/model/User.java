@@ -36,7 +36,7 @@ public class User extends AbstractEntity {
 
 	@OneToMany
 	private List<WorkItem> workItems;
-
+	
 	public enum Status {
 		ACTIVE, INACTIVE
 	}
