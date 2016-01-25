@@ -22,7 +22,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 
 import se.groupjcnr.projecti.model.Issue;
-import se.groupjcnr.projecti.model.User;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)

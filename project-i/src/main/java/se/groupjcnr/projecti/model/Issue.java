@@ -26,9 +26,10 @@ public class Issue extends AbstractEntity {
 		super();
 	}
 
-	public Issue(String title, WorkItem workItem) {
+	public Issue(String title) {
+		//WorkItem workItem ^
 		this.title = title;
-		this.workItem = workItem;
+		this.workItem = null;
 		this.status = Status.UNRESOLVED;
 	}
 
@@ -51,8 +52,10 @@ public class Issue extends AbstractEntity {
 		return workItem;
 	}
 
-	public void setWorkItem(WorkItem workItem) {
+	public Issue setWorkItem(WorkItem workItem) {
 		this.workItem = workItem;
+		
+		return this;
 	}
 
 	public Status getStatus() {
