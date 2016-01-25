@@ -21,8 +21,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
+import se.groupjcnr.projecti.resource.dao.TeamDAO;
 import se.groupjcnr.projecti.resource.dao.UserDAO;
+import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 
 @Path("i")
@@ -32,6 +35,7 @@ public class ProjectiResource {
 
 	private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory("PI");
 	private static final UserDAO userDAO = new UserJPADAO(factory);
+	private static final TeamDAO teamDAO = new TeamJPADAO(factory);
 //	private static final IssueDAO issueDAO = new IssueJPADAO(factory);
 
 	@Context
@@ -64,10 +68,12 @@ public class ProjectiResource {
 		return Response.created(location).build();
 	}
 
-//	@POST
-//	public Response createTeam(Team team) {
-//		return null;
-//	}
+	@POST
+	public Response createTeam(Team team) {
+		team = teamDAO.save(team);
+		URI location = uriInfo.getAbsolutePathBuilder().path(team.getId().toString()).build();
+		return Response.created(location).build();
+	}
 //
 //	@POST
 //	public Response createWorkItem(WorkItem workItem) {
@@ -92,11 +98,19 @@ public class ProjectiResource {
 		return userDAO.getUserByUserID(user.getUserId());
 	}
 
-//	@PUT
-//	public Team updateTeam(Team team) {
-//		return null;
-//	}
-//
+	@PUT
+	@Path("team/{id}")
+	public Team updateTeam(@PathParam("id") Long id, Team team) {
+		Team temp = teamDAO.findById(id);
+		temp.setName(team.getName());
+		temp.setItemList(team.getWorkItems());
+		temp.setUserList(team.getUsers());
+		temp.setStatus(team.getStatus());
+		teamDAO.save(temp);
+		
+		return teamDAO.findById(id);
+	}
+
 //	@PUT
 //	public Issue updateIssue(Issue issue) {
 //		return null;
@@ -111,11 +125,11 @@ public class ProjectiResource {
 		return Response.status(417).build();
 	}
 
-//	@DELETE
-//	public Response deactivateTeam(Team team) {
-//		return null;
-//	}
-//
+	@DELETE
+	public Response deactivateTeam(Team team) {
+		return null;
+	}
+
 //	@DELETE
 //	public Response deactivateWorkItem(WorkItem workItem) {
 //		return null;
