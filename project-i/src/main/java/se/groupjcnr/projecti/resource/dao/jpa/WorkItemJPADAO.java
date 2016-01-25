@@ -11,7 +11,7 @@ import static java.util.function.Function.identity;
 
 public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItemDAO {
 
-	protected WorkItemJPADAO(EntityManagerFactory factory) {
+	public WorkItemJPADAO(EntityManagerFactory factory) {
 		super(WorkItem.class, factory);
 	}
 
