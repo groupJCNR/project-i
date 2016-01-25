@@ -107,6 +107,10 @@ public final class MakeJson {
 		JsonObject json = new JsonObject();
 		json.addProperty("id", issue.getId());
 		json.addProperty("title", issue.getTitle());
+		if(issue.getWorkItem() != null) {
+			JsonObject workItem = workItemToJson(issue.getWorkItem());
+			json.add("workitem", workItem);
+		}
 		json.addProperty("status", issue.getStatus().toString());
 
 		return json;
@@ -194,6 +198,10 @@ public final class MakeJson {
 
 	public static Issue jsonToIssue(JsonObject json) throws JsonParseException {
 
+		if(json.get("id") == null) {
+			String title = json.get("title").getAsString();
+			return new Issue(title);
+		}
 		Long id = json.get("id").getAsLong();
 		String title = json.get("title").getAsString();
 		WorkItem workItem = jsonToWorkItem(json.get("workitem").getAsJsonObject());
