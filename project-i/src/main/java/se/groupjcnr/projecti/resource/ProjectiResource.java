@@ -174,6 +174,51 @@ public class ProjectiResource {
 
 		return teamDAO.findById(id);
 	}
+	
+	@PUT
+	@Path("workitem/{id}")
+	public WorkItem updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
+		WorkItem temp = workItemDAO.findById(id);
+		temp.setTitle(workItem.getTitle());
+		temp.setDescription(workItem.getDescription());
+		temp.setPriority(workItem.getPriority());
+		temp.setIssues(workItem.getIssues());
+		temp.setUser(workItem.getUser());
+		temp.setTeam(workItem.getTeam());
+		temp.setStatus(workItem.getStatus());
+		return workItemDAO.save(temp);
+	}
+	
+	@PUT
+	@Path("workitem/{workitemid}/user/{userid}")
+	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
+		WorkItem workItem = workItemDAO.findById(workItemId);
+		User user = userDAO.findById(userId);
+		workItem.setUser(user);
+		user.addWorkItem(workItem);
+		userDAO.save(user);
+		return workItemDAO.save(workItem);
+	}
+	
+	@GET
+	@Path("workitem/{id}/bystatus/{status}")
+	public WorkItem getWorkItemByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
+		return workItemDAO.getWorkItemByStatus(status);
+	}
+	
+	@GET
+	@Path("workitem/{id}/byteam/{team}")
+	public Response getWorkItemByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByTeam(team)){};
+		return Response.ok(result).build();
+	}
+	
+	@GET
+	@Path("workitem/getbyuser/{user}")
+	public Response getItemByUser(@PathParam("user") User user) {
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(user)){};
+		return Response.ok(result).build();
+	}
 
 	@DELETE
 	@Path("user/{id}")
@@ -216,12 +261,12 @@ public class ProjectiResource {
 	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
 
-		Issue temp = issueDAO.findById(id);
-		temp.setStatus(Issue.Status.REMOVED);
-		issueDAO.save(temp);
-		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-			return Response.accepted().build();
-		}
+//		Issue temp = issueDAO.findById(id);
+//		temp.setStatus(Issue.Status.REMOVED);
+//		issueDAO.save(temp);
+//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
+//			return Response.accepted().build();
+//		}
 		return Response.status(417).build();
 	}
 
