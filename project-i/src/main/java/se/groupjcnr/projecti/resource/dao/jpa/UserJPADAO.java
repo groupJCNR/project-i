@@ -23,22 +23,38 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 
 	@Override
 	public User getUserByFirstName(String firstName) {
-		return query("User.getUserByFirstName", identity()).get(0);
+		if (queryVariable("firstname", firstName, "User.getUserByFirstName", identity()).size()>0) {
+			return queryVariable("firstname", firstName, "User.getUserByFirstName", identity()).get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public User getUserByLastName(String lastName) {
-		return query("User.getUserByLastName", identity()).get(0);
+		if (queryVariable("lastname", lastName, "User.getUserByLastName", identity()).size()>0) {
+			return queryVariable("lastname", lastName, "User.getUserByLastName", identity()).get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public User getUserByUsername(String username) {
-		return query("User.getUserByUsername", identity()).get(0);
+		if (queryVariable("username", username, "User.getUserByUsername", identity()).size()>0) {
+			return queryVariable("username", username, "User.getUserByUsername", identity()).get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public User getUserByUserID(String userId) {
-		return query("User.getUserByUserId", identity()).get(0);
+		if (queryVariable("userid", userId, "User.getUserByUserId", identity()).size()>0) {
+			return queryVariable("userid", userId, "User.getUserByUserId", identity()).get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

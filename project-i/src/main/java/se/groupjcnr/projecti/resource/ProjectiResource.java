@@ -80,19 +80,20 @@ public class ProjectiResource {
 	}
 	
 	@GET
-	@Path("user/name/{name}")
+	@Path("user/getuser/{name}")
 	public Response getUserByName(@PathParam("name") String name) {
-		System.out.println("In method \"getUserByName\": ");
-		System.out.println("test: "+name + ", "+ userDAO.getUserByFirstName(name));
-		if(userDAO.getUserByFirstName(name).getFirstName().equals(name)){
+		User temp = userDAO.getUserByFirstName(name);
+		if(temp!=null && temp.getFirstName().equals(name)){
 			return Response.ok(userDAO.getUserByFirstName(name)).build();
 		}
 		
-		if(userDAO.getUserByLastName(name).getLastName().equals(name)){
+		temp = userDAO.getUserByLastName(name);
+		if(temp!=null && userDAO.getUserByLastName(name).getLastName().equals(name)){
 			return Response.ok(userDAO.getUserByLastName(name)).build();
 		}
 		
-		if(userDAO.getUserByUsername(name).getUsername().equals(name)){
+		temp = userDAO.getUserByUsername(name);
+		if(temp!=null && userDAO.getUserByUsername(name).getUsername().equals(name)){
 			return Response.ok(userDAO.getUserByUsername(name)).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();

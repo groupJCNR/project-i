@@ -67,8 +67,22 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 		EntityManager manager = factory.createEntityManager();
 		try {
 			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass);
+			System.out.println(typedQuery.toString());
 			return query.apply(typedQuery).getResultList();
-		} finally {
+		}
+		finally {
+			manager.close();
+		}
+	}
+	
+	protected List<E> queryVariable (String variable, String input, String queryName, Function<TypedQuery <E>, TypedQuery<E>> query) {
+		EntityManager manager = factory.createEntityManager();
+		try {
+			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass).setParameter(variable, input);
+			System.out.println(typedQuery.toString());
+			return query.apply(typedQuery).getResultList();
+		}
+		finally {
 			manager.close();
 		}
 	}
