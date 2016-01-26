@@ -201,20 +201,20 @@ public class ProjectiResource {
 	
 	@GET
 	@Path("workitem/{id}/bystatus/{status}")
-	public WorkItem getWorkItemByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
+	public WorkItem getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
 		return workItemDAO.getWorkItemByStatus(status);
 	}
 	
 	@GET
 	@Path("workitem/{id}/byteam/{team}")
-	public Response getWorkItemByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
+	public Response getWorkItemsByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByTeam(team)){};
 		return Response.ok(result).build();
 	}
 	
 	@GET
 	@Path("workitem/getbyuser/{id}")
-	public Response getItemByUser(@PathParam("id") Long id) {
+	public Response getWorkItemsByUser(@PathParam("id") Long id) {
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
 		return Response.ok(result).build();
 	}
