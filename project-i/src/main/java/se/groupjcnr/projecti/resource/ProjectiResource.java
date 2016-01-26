@@ -130,6 +130,7 @@ public class ProjectiResource {
 	public Response createIssue(@PathParam("id") Long id, Issue issue) {
 		WorkItem workItem = workItemDAO.findById(id);
 		issue = issue.setWorkItem(workItem);
+		issue = workItem.addIssue(issue);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -194,10 +195,8 @@ public class ProjectiResource {
 	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
-		workItem.setUser(user);
-		user.addWorkItem(workItem);
-		userDAO.save(user);
-		return workItemDAO.save(workItem);
+		user = userDAO.save(user.addWorkItem(workItem));
+		return workItemDAO.save(workItem.setUser(user));
 	}
 	
 	@GET
@@ -214,9 +213,9 @@ public class ProjectiResource {
 	}
 	
 	@GET
-	@Path("workitem/getbyuser/{user}")
-	public Response getItemByUser(@PathParam("user") User user) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(user)){};
+	@Path("workitem/getbyuser/{id}")
+	public Response getItemByUser(@PathParam("id") Long id) {
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
 		return Response.ok(result).build();
 	}
 

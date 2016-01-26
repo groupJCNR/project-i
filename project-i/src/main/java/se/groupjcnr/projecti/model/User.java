@@ -129,8 +129,8 @@ public class User extends AbstractEntity {
 		this.userId = userId;
 	}
 	
-	public WorkItem addWorkItem(WorkItem workItem) {
+	public User addWorkItem(WorkItem workItem) {
 		workItems.add(workItem);
-		return workItem;
+		return this;
 	}
 }
