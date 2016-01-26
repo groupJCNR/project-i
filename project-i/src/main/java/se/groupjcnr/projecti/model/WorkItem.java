@@ -6,13 +6,18 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "WORKITEM", schema = "PROJECTI")
-@NamedQuery(name = "WorkItem.getAll", query = "SELECT w FROM WorkItem w")
+@NamedQueries(value = { 
+		@NamedQuery(name = "WorkItem.getWorkItemsByStatus", query = "SELECT w FROM WorkItem w WHERE w.status = :status"),
+		@NamedQuery(name = "WorkItem.getWorkItemsByTeam", query = "SELECT w FROM WorkItem w WHERE w.team = :team"),
+	//	@NamedQuery(name = "WorkItem.getWorkItemsByPartDesc", query = "SELECT w FROM WorkItem w WHERE partialDesc LIKE = :partialDesc"),
+		@NamedQuery(name = "WorkItem.getAll", query = "SELECT w FROM WorkItem w")})
 public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
@@ -107,8 +112,9 @@ public class WorkItem extends AbstractEntity {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public WorkItem setUser(User user) {
 		this.user = user;
+		return this;
 	}
 
 	public Team getTeam() {
@@ -117,6 +123,11 @@ public class WorkItem extends AbstractEntity {
 
 	public void setTeam(Team team) {
 		this.team = team;
+	}
+	
+	public Issue addIssue(Issue issue) {
+		issues.add(issue);
+		return issue;
 	}
 
 }
