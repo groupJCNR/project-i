@@ -78,6 +78,26 @@ public class ProjectiResource {
 		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
 		return Response.created(location).build();
 	}
+	
+	@GET
+	@Path("user/getuser/{name}")
+	public Response getUserByName(@PathParam("name") String name) {
+		User temp = userDAO.getUserByFirstName(name);
+		if(temp!=null && temp.getFirstName().equals(name)){
+			return Response.ok(userDAO.getUserByFirstName(name)).build();
+		}
+		
+		temp = userDAO.getUserByLastName(name);
+		if(temp!=null && userDAO.getUserByLastName(name).getLastName().equals(name)){
+			return Response.ok(userDAO.getUserByLastName(name)).build();
+		}
+		
+		temp = userDAO.getUserByUsername(name);
+		if(temp!=null && userDAO.getUserByUsername(name).getUsername().equals(name)){
+			return Response.ok(userDAO.getUserByUsername(name)).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 
 	@GET
 	@Path("workitem")
@@ -130,6 +150,7 @@ public class ProjectiResource {
 	public Response createIssue(@PathParam("id") Long id, Issue issue) {
 		WorkItem workItem = workItemDAO.findById(id);
 		issue = issue.setWorkItem(workItem);
+		issue = workItem.addIssue(issue);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -194,10 +215,8 @@ public class ProjectiResource {
 	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
-		user.addWorkItem(workItem);
-		user = userDAO.save(user);
-		workItem.setUser(user);
-		return workItemDAO.save(workItem);
+		user = userDAO.save(user.addWorkItem(workItem));
+		return workItemDAO.save(workItem.setUser(user));
 	}
 	
 	@GET

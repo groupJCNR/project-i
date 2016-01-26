@@ -112,8 +112,9 @@ public class WorkItem extends AbstractEntity {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public WorkItem setUser(User user) {
 		this.user = user;
+		return this;
 	}
 
 	public Team getTeam() {
@@ -122,6 +123,11 @@ public class WorkItem extends AbstractEntity {
 
 	public void setTeam(Team team) {
 		this.team = team;
+	}
+	
+	public Issue addIssue(Issue issue) {
+		issues.add(issue);
+		return issue;
 	}
 
 }
