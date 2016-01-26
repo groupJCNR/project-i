@@ -98,10 +98,10 @@ public class ProjectiResource {
 
 	@GET
 	@Path("workitem/{id}")
-	public Response getWorkItem(@PathParam("id") String id) {
+	public Response getWorkItem(@PathParam("id") Long id) {
 
-		if (workItemDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(workItemDAO.findById(Long.parseLong(id))).build();
+		if (workItemDAO.findById(id) != null) {
+			return Response.ok(workItemDAO.findById(id)).build();
 		}
 
 		return Response.status(Status.BAD_REQUEST).build();
@@ -117,10 +117,10 @@ public class ProjectiResource {
 
 	@GET
 	@Path("issue/{id}")
-	public Response getIssueById(@PathParam("id") String id) {
+	public Response getIssueById(@PathParam("id") Long id) {
 
-		if (issueDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(issueDAO.findById(Long.parseLong(id))).build();
+		if (issueDAO.findById(id) != null) {
+			return Response.ok(issueDAO.findById(id)).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
