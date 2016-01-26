@@ -16,10 +16,11 @@ import javax.persistence.Table;
 @Table(name = "USERS", schema = "PROJECTI")
 @NamedQueries(value = { 
 		@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u"),
-		@NamedQuery(name = "User.getUserByFirstName", query = "SELECT u FROM User u WHERE u.firstName =:firstName"),
-		@NamedQuery(name = "User.getUserByLastName", query = "SELECT u FROM User u WHERE u.lastName =:lastName"),
+		@NamedQuery(name = "User.getUserByFirstName", query = "SELECT u FROM User u WHERE u.firstName =:firstname"),
+		@NamedQuery(name = "User.getUserByLastName", query = "SELECT u FROM User u WHERE u.lastName =:lastname"),
 		@NamedQuery(name = "User.getUserByUsername", query = "SELECT u FROM User u WHERE u.username =:username"),
-		@NamedQuery(name = "User.getUserByUserId", query = "SELECT u FROM User u WHERE u.userId =:userId")})
+		@NamedQuery(name = "User.getUserByUserId", query = "SELECT u FROM User u WHERE u.userId =:userId"),
+		@NamedQuery(name = "User.getUserByTeam", query = "SELECT u FROM User u WHERE u.teams =:teams")})
 public class User extends AbstractEntity {
 
 	@Column(nullable = false)
@@ -56,18 +57,18 @@ public class User extends AbstractEntity {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = Status.ACTIVE;
-		this.userId = UUID.randomUUID().toString();
+		this.userId = username + this.getId();
 		this.teams = new ArrayList<>();
 		this.workItems = new ArrayList<>();
 	}
 
-	public User(Long id, String firstName, String lastName, Status status, String username, String userId,
+	public User(Long id, String firstName, String lastName, Status status, String userName, String userId,
 			List<Team> teams, List<WorkItem> workItems) {
 		this.setId(id);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = status;
-		this.username = username;
+		this.username = firstName+id;
 		this.userId = userId;
 		this.teams = teams;
 		this.workItems = workItems;

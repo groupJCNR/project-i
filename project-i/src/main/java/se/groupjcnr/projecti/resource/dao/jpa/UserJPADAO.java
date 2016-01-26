@@ -32,7 +32,7 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	}
 
 	@Override
-	public User getUserByusername(String username) {
+	public User getUserByUsername(String username) {
 		return query("User.getUserByUsername", identity()).get(0);
 	}
 
@@ -45,5 +45,4 @@ public class UserJPADAO extends AbstractJPADAO<User> implements UserDAO {
 	public List<User> getUserByTeam(Team team) {
 		return query("User.getUserByTeam", identity());
 	}
-
 }

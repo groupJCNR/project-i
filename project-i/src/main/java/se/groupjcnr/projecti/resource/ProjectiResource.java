@@ -78,6 +78,25 @@ public class ProjectiResource {
 		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
 		return Response.created(location).build();
 	}
+	
+	@GET
+	@Path("user/name/{name}")
+	public Response getUserByName(@PathParam("name") String name) {
+		System.out.println("In method \"getUserByName\": ");
+		System.out.println("test: "+name + ", "+ userDAO.getUserByFirstName(name));
+		if(userDAO.getUserByFirstName(name).getFirstName().equals(name)){
+			return Response.ok(userDAO.getUserByFirstName(name)).build();
+		}
+		
+		if(userDAO.getUserByLastName(name).getLastName().equals(name)){
+			return Response.ok(userDAO.getUserByLastName(name)).build();
+		}
+		
+		if(userDAO.getUserByUsername(name).getUsername().equals(name)){
+			return Response.ok(userDAO.getUserByUsername(name)).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 
 	@GET
 	@Path("workitem")
@@ -216,12 +235,12 @@ public class ProjectiResource {
 	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
 
-		Issue temp = issueDAO.findById(id);
-		temp.setStatus(Issue.Status.REMOVED);
-		issueDAO.save(temp);
-		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-			return Response.accepted().build();
-		}
+//		Issue temp = issueDAO.findById(id);
+//		temp.setStatus(Issue.Status.REMOVED);
+//		issueDAO.save(temp);
+//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
+//			return Response.accepted().build();
+//		}
 		return Response.status(417).build();
 	}
 
