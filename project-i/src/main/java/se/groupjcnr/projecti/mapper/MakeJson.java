@@ -72,25 +72,31 @@ public final class MakeJson {
 	public static JsonObject workItemToJson(WorkItem workItem) {
 
 		JsonObject json = new JsonObject();
-		json.addProperty("id", workItem.getId());
-		json.addProperty("title", workItem.getTitle());
-		json.addProperty("description", workItem.getDescription());
-		json.addProperty("priority", workItem.getPriority());
 
-		JsonArray issues = new JsonArray();
-		workItem.getIssues().forEach(i -> {
-			JsonObject issue = issueToJson(i);
-			issues.add(issue);
-		});
+			json.addProperty("id", workItem.getId());
+			json.addProperty("title", workItem.getTitle());
+			json.addProperty("description", workItem.getDescription());
+			json.addProperty("priority", workItem.getPriority());
 
-		json.add("issues", issues);
+		if (workItem.getIssues().size() >= 1) {
+			JsonArray issues = new JsonArray();
+			workItem.getIssues().forEach(i -> {
+				JsonObject issue = issueToJson(i);
+				issues.add(issue);
+			});
+			json.add("issues", issues);
+		}
 
+		if(workItem.getUser() != null) {
 		JsonObject user = userToJson(workItem.getUser());
 		json.add("user", user);
-
+		}
+		
+		if(workItem.getTeam() != null) {
 		JsonObject team = teamToJson(workItem.getTeam());
 		json.add("team", team);
-
+		}
+		
 		json.addProperty("status", workItem.getStatus().toString());
 
 		return json;
@@ -101,6 +107,10 @@ public final class MakeJson {
 		JsonObject json = new JsonObject();
 		json.addProperty("id", issue.getId());
 		json.addProperty("title", issue.getTitle());
+		if(issue.getWorkItem() != null) {
+			JsonObject workItem = workItemToJson(issue.getWorkItem());
+			json.add("workitem", workItem);
+		}
 		json.addProperty("status", issue.getStatus().toString());
 
 		return json;
@@ -112,10 +122,10 @@ public final class MakeJson {
 			String username = json.get("username").getAsString();
 			String firstName = json.get("firstname").getAsString();
 			String lastName = json.get("lastname").getAsString();
-			
+
 			return new User(username, firstName, lastName);
 		}
-		
+
 		Long id = json.get("id").getAsLong();
 		String firstName = json.get("firstname").getAsString();
 		String lastName = json.get("lastname").getAsString();
@@ -135,8 +145,7 @@ public final class MakeJson {
 			workItems.add(jsonToWorkItem(wi.getAsJsonObject()));
 		});
 
-		return new User(id, firstName, lastName, User.Status.valueOf(status), 
-				username, userId, teams, workItems);
+		return new User(id, firstName, lastName, User.Status.valueOf(status), username, userId, teams, workItems);
 	}
 
 	public static Team jsonToTeam(JsonObject json) throws JsonParseException {
@@ -162,6 +171,13 @@ public final class MakeJson {
 
 	public static WorkItem jsonToWorkItem(JsonObject json) throws JsonParseException {
 
+		if (json.get("id") == null) {
+			String title = json.get("title").getAsString();
+			String description = json.get("description").getAsString();
+
+			return new WorkItem(title, description);
+		}
+
 		Long id = json.get("id").getAsLong();
 		String title = json.get("title").getAsString();
 		String descrition = json.get("description").getAsString();
@@ -182,6 +198,10 @@ public final class MakeJson {
 
 	public static Issue jsonToIssue(JsonObject json) throws JsonParseException {
 
+		if(json.get("id") == null) {
+			String title = json.get("title").getAsString();
+			return new Issue(title);
+		}
 		Long id = json.get("id").getAsLong();
 		String title = json.get("title").getAsString();
 		WorkItem workItem = jsonToWorkItem(json.get("workitem").getAsJsonObject());
