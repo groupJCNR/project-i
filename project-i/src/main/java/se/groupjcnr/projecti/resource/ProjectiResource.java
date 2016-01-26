@@ -214,11 +214,11 @@ public class ProjectiResource {
 	}
 	
 	@GET
-	@Path("workitem/getbyuser/{user}")
-	public Response getItemByUser(@PathParam("user") User user) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(user)){};
-		return Response.ok(result).build();
-	}
+	 @Path("workitem/getbyuser/{id}")
+	 public Response getItemByUser(@PathParam("id") Long id) {
+	  GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
+	  return Response.ok(result).build();
+	 }
 
 	@DELETE
 	@Path("user/{id}")
