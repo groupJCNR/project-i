@@ -15,10 +15,10 @@
 			<property name="javax.persistence.jdbc.password" value="test" />
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 			<property name="javax.persistence.schema-generation.database.action"
-				value="drop-and-create" />
+				value="create" />
 			<property name="javax.persistence.schema-generation.scripts.action"
-				value="drop-and-create" />
-			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+				value="create" />
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 		</properties>
 	</persistence-unit>
 </persistence>
