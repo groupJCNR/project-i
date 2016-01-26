@@ -216,12 +216,12 @@ public class ProjectiResource {
 	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
 
-		Issue temp = issueDAO.findById(id);
-		temp.setStatus(Issue.Status.REMOVED);
-		issueDAO.save(temp);
-		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-			return Response.accepted().build();
-		}
+//		Issue temp = issueDAO.findById(id);
+//		temp.setStatus(Issue.Status.REMOVED);
+//		issueDAO.save(temp);
+//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
+//			return Response.accepted().build();
+//		}
 		return Response.status(417).build();
 	}
 
