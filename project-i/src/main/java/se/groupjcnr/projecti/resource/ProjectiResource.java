@@ -130,6 +130,7 @@ public class ProjectiResource {
 	public Response createIssue(@PathParam("id") Long id, Issue issue) {
 		WorkItem workItem = workItemDAO.findById(id);
 		issue = issue.setWorkItem(workItem);
+		issue = workItem.addIssue(issue);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -173,6 +174,49 @@ public class ProjectiResource {
 		teamDAO.save(temp);
 
 		return teamDAO.findById(id);
+	}
+	
+	@PUT
+	@Path("workitem/{id}")
+	public WorkItem updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
+		WorkItem temp = workItemDAO.findById(id);
+		temp.setTitle(workItem.getTitle());
+		temp.setDescription(workItem.getDescription());
+		temp.setPriority(workItem.getPriority());
+		temp.setIssues(workItem.getIssues());
+		temp.setUser(workItem.getUser());
+		temp.setTeam(workItem.getTeam());
+		temp.setStatus(workItem.getStatus());
+		return workItemDAO.save(temp);
+	}
+	
+	@PUT
+	@Path("workitem/{workitemid}/user/{userid}")
+	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
+		WorkItem workItem = workItemDAO.findById(workItemId);
+		User user = userDAO.findById(userId);
+		user = userDAO.save(user.addWorkItem(workItem));
+		return workItemDAO.save(workItem.setUser(user));
+	}
+	
+	@GET
+	@Path("workitem/{id}/bystatus/{status}")
+	public WorkItem getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
+		return workItemDAO.getWorkItemByStatus(status);
+	}
+	
+	@GET
+	@Path("workitem/{id}/byteam/{team}")
+	public Response getWorkItemsByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByTeam(team)){};
+		return Response.ok(result).build();
+	}
+	
+	@GET
+	@Path("workitem/getbyuser/{id}")
+	public Response getWorkItemsByUser(@PathParam("id") Long id) {
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
+		return Response.ok(result).build();
 	}
 
 	@DELETE

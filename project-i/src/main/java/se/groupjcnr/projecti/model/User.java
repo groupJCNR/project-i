@@ -128,4 +128,9 @@ public class User extends AbstractEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	
+	public User addWorkItem(WorkItem workItem) {
+		workItems.add(workItem);
+		return this;
+	}
 }
