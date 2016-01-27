@@ -67,7 +67,7 @@ public class User extends AbstractEntity {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = status;
-		this.username = firstName+id;
+		this.username = userName;
 		this.userId = userId;
 		this.teams = teams;
 		this.workItems = workItems;
@@ -138,6 +138,11 @@ public class User extends AbstractEntity {
 	
 	public User addWorkItem(WorkItem workItem) {
 		workItems.add(workItem);
+		return this;
+	}
+	
+	public User addTeam(Team team) {
+		teams.add(team);
 		return this;
 	}
 }

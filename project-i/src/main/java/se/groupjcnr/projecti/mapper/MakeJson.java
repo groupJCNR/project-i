@@ -73,10 +73,10 @@ public final class MakeJson {
 
 		JsonObject json = new JsonObject();
 
-			json.addProperty("id", workItem.getId());
-			json.addProperty("title", workItem.getTitle());
-			json.addProperty("description", workItem.getDescription());
-			json.addProperty("priority", workItem.getPriority());
+		json.addProperty("id", workItem.getId());
+		json.addProperty("title", workItem.getTitle());
+		json.addProperty("description", workItem.getDescription());
+		json.addProperty("priority", workItem.getPriority());
 
 		if (workItem.getIssues().size() >= 1) {
 			JsonArray issues = new JsonArray();
@@ -87,16 +87,16 @@ public final class MakeJson {
 			json.add("issues", issues);
 		}
 
-		if(workItem.getUser() != null) {
-		JsonObject user = userToJson(workItem.getUser());
-		json.add("user", user);
+		if (workItem.getUser() != null) {
+			JsonObject user = userToJson(workItem.getUser());
+			json.add("user", user);
 		}
-		
-		if(workItem.getTeam() != null) {
-		JsonObject team = teamToJson(workItem.getTeam());
-		json.add("team", team);
+
+		if (workItem.getTeam() != null) {
+			JsonObject team = teamToJson(workItem.getTeam());
+			json.add("team", team);
 		}
-		
+
 		json.addProperty("status", workItem.getStatus().toString());
 
 		return json;
@@ -107,7 +107,7 @@ public final class MakeJson {
 		JsonObject json = new JsonObject();
 		json.addProperty("id", issue.getId());
 		json.addProperty("title", issue.getTitle());
-		if(issue.getWorkItem() != null) {
+		if (issue.getWorkItem() != null) {
 			JsonObject workItem = workItemToJson(issue.getWorkItem());
 			json.add("workitem", workItem);
 		}
@@ -153,7 +153,7 @@ public final class MakeJson {
 		if (json.get("id") == null) {
 			return new Team(json.get("name").getAsString());
 		}
-		
+
 		Long id = json.get("id").getAsLong();
 		String name = json.get("name").getAsString();
 		String status = json.get("status").getAsString();
@@ -202,7 +202,7 @@ public final class MakeJson {
 
 	public static Issue jsonToIssue(JsonObject json) throws JsonParseException {
 
-		if(json.get("id") == null) {
+		if (json.get("id") == null) {
 			String title = json.get("title").getAsString();
 			return new Issue(title);
 		}
