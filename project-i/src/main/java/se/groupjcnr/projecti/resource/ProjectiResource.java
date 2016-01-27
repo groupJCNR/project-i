@@ -100,6 +100,20 @@ public class ProjectiResource {
 	}
 
 	@GET
+	@Path("user/byteam/{teamid}")
+	public Response getUserByTeam(@PathParam("teamid") Long teamId) {
+		Team team = teamDAO.findById(teamId);
+
+		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(team.getUsers()) {};
+		
+		if(!result.getEntity().isEmpty()){
+			return Response.ok(result).build();
+		}
+
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@GET
 	@Path("user/byname/{name}")
 	public Response getUserByName(@PathParam("name") String name) {
 
@@ -267,18 +281,18 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("issue/{id}")
-	public Issue updateIssue(@PathParam("id") Long id, Issue issue) {
+	public Response updateIssue(@PathParam("id") Long id, Issue issue) {
 		Issue temp = issueDAO.findById(id);
 		temp.setTitle(issue.getTitle());
 		temp.setWorkItem(issue.getWorkItem());
 		temp.setStatus(issue.getStatus());
 
-		return issueDAO.save(temp);
+		return Response.ok(issueDAO.save(temp)).build();
 	}
 
 	@PUT
 	@Path("team/{id}")
-	public Team updateTeam(@PathParam("id") Long id, Team team) {
+	public Response updateTeam(@PathParam("id") Long id, Team team) {
 		Team temp = teamDAO.findById(id);
 		temp.setName(team.getName());
 		temp.setItemList(team.getWorkItems());
@@ -286,12 +300,12 @@ public class ProjectiResource {
 		temp.setStatus(team.getStatus());
 		teamDAO.save(temp);
 
-		return teamDAO.findById(id);
+		return Response.ok(teamDAO.findById(id)).build();
 	}
 
 	@PUT
 	@Path("workitem/{id}")
-	public WorkItem updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
+	public Response updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
 		WorkItem temp = workItemDAO.findById(id);
 		temp.setTitle(workItem.getTitle());
 		temp.setDescription(workItem.getDescription());
@@ -300,31 +314,31 @@ public class ProjectiResource {
 		temp.setUser(workItem.getUser());
 		temp.setTeam(workItem.getTeam());
 		temp.setStatus(workItem.getStatus());
-		return workItemDAO.save(temp);
+		return Response.ok(workItemDAO.save(temp)).build();
 	}
 
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
-	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
+	public Response addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
 
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
 
 		user = userDAO.save(user.addWorkItem(workItem));
 
-		return workItemDAO.save(workItem.setUser(user));
+		return Response.ok(workItemDAO.save(workItem.setUser(user))).build();
 	}
 
 	@GET
-	@Path("workitem/{id}/bystatus/{status}")
+	@Path("workitem/bystatus/{status}")
 	public Response getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
 
 		return Response.ok(workItemDAO.getWorkItemByStatus(status)).build();
 	}
 
 	@GET
-	@Path("workitem/{id}/byteam/{team}")
-	public Response getWorkItemsByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
+	@Path("workitem/byteam/{team}")
+	public Response getWorkItemsByTeam(@PathParam("team") Team team) {
 
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
 				workItemDAO.getWorkItemsByTeam(team)) {
