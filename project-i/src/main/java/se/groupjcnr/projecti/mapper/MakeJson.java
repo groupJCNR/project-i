@@ -150,6 +150,10 @@ public final class MakeJson {
 
 	public static Team jsonToTeam(JsonObject json) throws JsonParseException {
 
+		if (json.get("id") == null) {
+			return new Team(json.get("name").getAsString());
+		}
+		
 		Long id = json.get("id").getAsLong();
 		String name = json.get("name").getAsString();
 		String status = json.get("status").getAsString();
