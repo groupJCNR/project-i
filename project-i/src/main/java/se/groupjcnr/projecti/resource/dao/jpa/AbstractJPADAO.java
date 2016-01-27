@@ -10,11 +10,11 @@ import javax.persistence.TypedQuery;
 import se.groupjcnr.projecti.model.AbstractEntity;
 import se.groupjcnr.projecti.resource.dao.CrudDAO;
 
-public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudDAO<E> {
-	
+public abstract class AbstractJPADAO<E extends AbstractEntity> implements CrudDAO<E> {
+
 	private final EntityManagerFactory factory;
 	private final Class<E> entityClass;
-	
+
 	protected AbstractJPADAO(Class<E> entityClass, EntityManagerFactory factory) {
 		this.factory = factory;
 		this.entityClass = entityClass;
@@ -22,8 +22,8 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 
 	@Override
 	public E save(E entity) {
-		if(entity.getId() == null) {
-			return execute(manager ->{
+		if (entity.getId() == null) {
+			return execute(manager -> {
 				manager.persist(entity);
 				return entity;
 			});
@@ -31,7 +31,7 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 			return execute(manager -> manager.merge(entity));
 		}
 	}
-	
+
 	@Override
 	public E remove(E entity) {
 		return execute(manager -> {
@@ -44,7 +44,7 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 	@Override
 	public E findById(Long id) {
 		EntityManager manager = factory.createEntityManager();
-		try{
+		try {
 			return manager.find(entityClass, id);
 		} finally {
 			manager.close();
@@ -53,7 +53,7 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 
 	private E execute(Function<EntityManager, E> operation) {
 		EntityManager manager = factory.createEntityManager();
-		try{
+		try {
 			manager.getTransaction().begin();
 			E result = operation.apply(manager);
 			manager.getTransaction().commit();
@@ -62,25 +62,24 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 			manager.close();
 		}
 	}
-	
-	protected List<E> query (String queryName, Function<TypedQuery <E>, TypedQuery<E>> query) {
+
+	protected List<E> query(String queryName, Function<TypedQuery<E>, TypedQuery<E>> query) {
 		EntityManager manager = factory.createEntityManager();
 		try {
 			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass);
 			return query.apply(typedQuery).getResultList();
-		}
-		finally {
+		} finally {
 			manager.close();
 		}
 	}
-	
-	protected List<E> queryVariable (String variable, String input, String queryName, Function<TypedQuery <E>, TypedQuery<E>> query) {
+
+	protected List<E> queryVariable(String variable, String input, String queryName,
+			Function<TypedQuery<E>, TypedQuery<E>> query) {
 		EntityManager manager = factory.createEntityManager();
 		try {
 			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass).setParameter(variable, input);
 			return query.apply(typedQuery).getResultList();
-		}
-		finally {
+		} finally {
 			manager.close();
 		}
 	}
