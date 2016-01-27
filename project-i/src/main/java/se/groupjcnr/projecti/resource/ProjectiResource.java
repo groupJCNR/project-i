@@ -55,8 +55,14 @@ public class ProjectiResource {
 	@GET
 	@Path("user")
 	public Response getUsers() {
+
 		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {
 		};
+
+		if (result.getEntity().isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
 		return Response.ok(result).build();
 	}
 
@@ -74,16 +80,40 @@ public class ProjectiResource {
 	@POST
 	@Path("user")
 	public Response createUser(User user) {
+
 		user = userDAO.save(user);
 		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
+
 		return Response.created(location).build();
+	}
+
+	@GET
+	@Path("user/byname/{name}")
+	public Response getUserByName(@PathParam("name") String name) {
+
+		User temp = userDAO.getUserByFirstName(name);
+		if (temp != null && temp.getFirstName().equals(name)) {
+			return Response.ok(userDAO.getUserByFirstName(name)).build();
+		}
+
+		temp = userDAO.getUserByLastName(name);
+		if (temp != null && userDAO.getUserByLastName(name).getLastName().equals(name)) {
+			return Response.ok(userDAO.getUserByLastName(name)).build();
+		}
+
+		temp = userDAO.getUserByUsername(name);
+		if (temp != null && userDAO.getUserByUsername(name).getUsername().equals(name)) {
+			return Response.ok(userDAO.getUserByUsername(name)).build();
+		}
+
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
 	@Path("workitem")
 	public Response getWorkItems() {
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
-		System.out.println("created this thing: " + result.toString());
+
 		return Response.ok(result).build();
 	}
 
@@ -109,8 +139,10 @@ public class ProjectiResource {
 	@POST
 	@Path("workitem")
 	public Response createWorkItem(WorkItem workItem) {
+		
 		workItem = workItemDAO.save(workItem);
 		URI location = uriInfo.getAbsolutePathBuilder().path(workItem.getId().toString()).build();
+		
 		return Response.created(location).build();
 	}
 
@@ -121,6 +153,7 @@ public class ProjectiResource {
 		if (issue != null && !issue.getStatus().equals(Issue.Status.REMOVED)) {
 			return Response.ok(issueDAO.findById(id)).build();
 		}
+		
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
@@ -132,6 +165,7 @@ public class ProjectiResource {
 		workItem = workItem.addIssue(issue);
 		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
+
 		return issueDAO.save(issue);
 	}
 	
@@ -182,7 +216,7 @@ public class ProjectiResource {
 
 		return teamDAO.findById(id);
 	}
-	
+
 	@PUT
 	@Path("workitem/{id}")
 	public WorkItem updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
@@ -196,35 +230,37 @@ public class ProjectiResource {
 		temp.setStatus(workItem.getStatus());
 		return workItemDAO.save(temp);
 	}
-	
+
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
 	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
-		user.addWorkItem(workItem);
-		user = userDAO.save(user);
-		workItem.setUser(user);
-		return workItemDAO.save(workItem);
+		user = userDAO.save(user.addWorkItem(workItem));
+		return workItemDAO.save(workItem.setUser(user));
 	}
-	
+
 	@GET
 	@Path("workitem/{id}/bystatus/{status}")
 	public WorkItem getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
 		return workItemDAO.getWorkItemByStatus(status);
 	}
-	
+
 	@GET
 	@Path("workitem/{id}/byteam/{team}")
 	public Response getWorkItemsByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByTeam(team)){};
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
+				workItemDAO.getWorkItemsByTeam(team)) {
+		};
 		return Response.ok(result).build();
 	}
-	
+
 	@GET
 	@Path("workitem/getbyuser/{id}")
 	public Response getWorkItemsByUser(@PathParam("id") Long id) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
+				workItemDAO.getWorkItemsByUser(userDAO.findById(id))) {
+		};
 		return Response.ok(result).build();
 	}
 

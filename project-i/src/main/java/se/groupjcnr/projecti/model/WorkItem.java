@@ -112,8 +112,9 @@ public class WorkItem extends AbstractEntity {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public WorkItem setUser(User user) {
 		this.user = user;
+		return this;
 	}
 
 	public Team getTeam() {

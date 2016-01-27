@@ -14,7 +14,7 @@ public interface UserDAO extends CrudDAO<User>{
 
     User getUserByLastName(String lastName);
 
-    User getUserByusername(String username);
+    User getUserByUsername(String username);
     
     User getUserByUserID(String userId);
     
