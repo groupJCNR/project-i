@@ -66,8 +66,8 @@ public class ProjectiResource {
 	@Path("user")
 	public Response getUsers() {
 
-		GenericEntity<Collection<User>> result = 
-				new GenericEntity<Collection<User>>(userDAO.getAll()) {};
+		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {
+		};
 
 		if (!result.getEntity().isEmpty()) {
 			return Response.ok(result).build();
@@ -87,16 +87,31 @@ public class ProjectiResource {
 
 		return Response.status(Status.BAD_REQUEST).build();
 	}
-	
+
 	@GET
 	@Path("user/byuserid/{userid}")
 	public Response getUserByUserId(@PathParam("userid") String userId) {
-		
+
 		User user = userDAO.getUserByUserID(userId);
 		if ((user != null) && (user.getStatus() != User.Status.REMOVED)) {
 			return Response.ok(user).build();
 		}
+
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@GET
+	@Path("user/byteam/{teamid}")
+	public Response getUserByTeam(@PathParam("teamid") Long teamId) {
+		Team team = teamDAO.findById(teamId);
+
+		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(team.getUsers()) {
+		};
 		
+		if(!result.getEntity().isEmpty()){
+			return Response.ok(result).build();
+		}
+
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
@@ -129,7 +144,7 @@ public class ProjectiResource {
 		if (userDAO.findById(id) == null) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		
+
 		User user = userDAO.findById(id);
 		user = user.setFirstName(userChange.getFirstName());
 		user = user.setLastName(userChange.getLastName());
