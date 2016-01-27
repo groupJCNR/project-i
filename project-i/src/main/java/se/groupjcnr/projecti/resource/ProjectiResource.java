@@ -55,8 +55,14 @@ public class ProjectiResource {
 	@GET
 	@Path("user")
 	public Response getUsers() {
+
 		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {
 		};
+
+		if (result.getEntity().isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
 		return Response.ok(result).build();
 	}
 
@@ -74,37 +80,41 @@ public class ProjectiResource {
 	@POST
 	@Path("user")
 	public Response createUser(User user) {
+
 		user = userDAO.save(user);
 		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
+
 		return Response.created(location).build();
 	}
-	
+
 	@GET
-	@Path("user/getuser/{name}")
+	@Path("user/byname/{name}")
 	public Response getUserByName(@PathParam("name") String name) {
+
 		User temp = userDAO.getUserByFirstName(name);
-		if(temp!=null && temp.getFirstName().equals(name)){
+		if (temp != null && temp.getFirstName().equals(name)) {
 			return Response.ok(userDAO.getUserByFirstName(name)).build();
 		}
-		
+
 		temp = userDAO.getUserByLastName(name);
-		if(temp!=null && userDAO.getUserByLastName(name).getLastName().equals(name)){
+		if (temp != null && userDAO.getUserByLastName(name).getLastName().equals(name)) {
 			return Response.ok(userDAO.getUserByLastName(name)).build();
 		}
-		
+
 		temp = userDAO.getUserByUsername(name);
-		if(temp!=null && userDAO.getUserByUsername(name).getUsername().equals(name)){
+		if (temp != null && userDAO.getUserByUsername(name).getUsername().equals(name)) {
 			return Response.ok(userDAO.getUserByUsername(name)).build();
 		}
+
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
 	@Path("workitem")
 	public Response getWorkItems() {
-		System.out.println("arrived inside getWorkItems");
+
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
-		System.out.println("created this thing: " + result.toString());
+
 		return Response.ok(result).build();
 	}
 
@@ -118,10 +128,10 @@ public class ProjectiResource {
 
 	@GET
 	@Path("workitem/{id}")
-	public Response getWorkItem(@PathParam("id") String id) {
+	public Response getWorkItem(@PathParam("id") Long id) {
 
-		if (workItemDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(workItemDAO.findById(Long.parseLong(id))).build();
+		if (workItemDAO.findById(id) != null) {
+			return Response.ok(workItemDAO.findById(id)).build();
 		}
 
 		return Response.status(Status.BAD_REQUEST).build();
@@ -130,18 +140,21 @@ public class ProjectiResource {
 	@POST
 	@Path("workitem")
 	public Response createWorkItem(WorkItem workItem) {
+		
 		workItem = workItemDAO.save(workItem);
 		URI location = uriInfo.getAbsolutePathBuilder().path(workItem.getId().toString()).build();
+		
 		return Response.created(location).build();
 	}
 
 	@GET
 	@Path("issue/{id}")
-	public Response getIssueById(@PathParam("id") String id) {
+	public Response getIssueById(@PathParam("id") Long id) {
 
-		if (issueDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(issueDAO.findById(Long.parseLong(id))).build();
+		if (issueDAO.findById(id) != null) {
+			return Response.ok(issueDAO.findById(id)).build();
 		}
+		
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
@@ -150,7 +163,7 @@ public class ProjectiResource {
 	public Response createIssue(@PathParam("id") Long id, Issue issue) {
 		WorkItem workItem = workItemDAO.findById(id);
 		issue = issue.setWorkItem(workItem);
-		issue = workItem.addIssue(issue);
+		workItem = workItem.addIssue(issue);
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -195,7 +208,7 @@ public class ProjectiResource {
 
 		return teamDAO.findById(id);
 	}
-	
+
 	@PUT
 	@Path("workitem/{id}")
 	public WorkItem updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
@@ -209,7 +222,7 @@ public class ProjectiResource {
 		temp.setStatus(workItem.getStatus());
 		return workItemDAO.save(temp);
 	}
-	
+
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
 	public WorkItem addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
@@ -218,25 +231,28 @@ public class ProjectiResource {
 		user = userDAO.save(user.addWorkItem(workItem));
 		return workItemDAO.save(workItem.setUser(user));
 	}
-	
+
 	@GET
 	@Path("workitem/{id}/bystatus/{status}")
 	public WorkItem getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
 		return workItemDAO.getWorkItemByStatus(status);
 	}
-	
+
 	@GET
 	@Path("workitem/{id}/byteam/{team}")
 	public Response getWorkItemsByTeam(@PathParam("id") Long id, @PathParam("team") Team team) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByTeam(team)){};
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
+				workItemDAO.getWorkItemsByTeam(team)) {
+		};
 		return Response.ok(result).build();
 	}
-	
-	@GET
 
+	@GET
 	@Path("workitem/getbyuser/{id}")
 	public Response getWorkItemsByUser(@PathParam("id") Long id) {
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getWorkItemsByUser(userDAO.findById(id))){};
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
+				workItemDAO.getWorkItemsByUser(userDAO.findById(id))) {
+		};
 		return Response.ok(result).build();
 	}
 
@@ -281,12 +297,12 @@ public class ProjectiResource {
 	@PathParam("issue/{id}")
 	public Response deactivateIssue(@PathParam("id") Long id) {
 
-//		Issue temp = issueDAO.findById(id);
-//		temp.setStatus(Issue.Status.REMOVED);
-//		issueDAO.save(temp);
-//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-//			return Response.accepted().build();
-//		}
+		// Issue temp = issueDAO.findById(id);
+		// temp.setStatus(Issue.Status.REMOVED);
+		// issueDAO.save(temp);
+		// if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
+		// return Response.accepted().build();
+		// }
 		return Response.status(417).build();
 	}
 
