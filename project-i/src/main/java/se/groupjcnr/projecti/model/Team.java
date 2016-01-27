@@ -72,7 +72,7 @@ public class Team extends AbstractEntity {
 		return workItems;
 	}
 
-	public Team setItemList(List<WorkItem> itemList) {
+	public Team setWorkItems(List<WorkItem> itemList) {
 		this.workItems = itemList;
 		return this;
 	}
@@ -81,8 +81,8 @@ public class Team extends AbstractEntity {
 		return users;
 	}
 
-	public Team setUserList(List<User> userList) {
-		this.users = userList;
+	public Team setUsers(List<User> users) {
+		this.users = users;
 		return this;
 	}
 
