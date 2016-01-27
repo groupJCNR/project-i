@@ -67,7 +67,6 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 		EntityManager manager = factory.createEntityManager();
 		try {
 			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass);
-			System.out.println(typedQuery.toString());
 			return query.apply(typedQuery).getResultList();
 		}
 		finally {
@@ -79,7 +78,6 @@ public abstract class AbstractJPADAO <E extends AbstractEntity> implements CrudD
 		EntityManager manager = factory.createEntityManager();
 		try {
 			TypedQuery<E> typedQuery = manager.createNamedQuery(queryName, entityClass).setParameter(variable, input);
-			System.out.println(typedQuery.toString());
 			return query.apply(typedQuery).getResultList();
 		}
 		finally {

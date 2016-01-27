@@ -70,6 +70,17 @@ public class ProjectiResource {
 
 		return Response.status(Status.BAD_REQUEST).build();
 	}
+	
+	@GET
+	@Path("user/userid/{userid}")
+	public Response getUserByUserId(@PathParam("userid") String id) {
+		{
+			
+		}
+		
+		
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 
 	@POST
 	@Path("user")
