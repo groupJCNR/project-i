@@ -63,8 +63,8 @@ public class ProjectiResource {
 	@GET
 	@Path("user/{id}")
 	public Response getUserById(@PathParam("id") Long id) {
-
-		if (userDAO.findById(id) != null) {
+		User user = userDAO.findById(id);
+		if (user != null && !user.getStatus().equals(User.Status.REMOVED)) {
 			return Response.ok(userDAO.findById(id)).build();
 		}
 
@@ -82,7 +82,6 @@ public class ProjectiResource {
 	@GET
 	@Path("workitem")
 	public Response getWorkItems() {
-		System.out.println("arrived inside getWorkItems");
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
 		System.out.println("created this thing: " + result.toString());
 		return Response.ok(result).build();
@@ -98,10 +97,10 @@ public class ProjectiResource {
 
 	@GET
 	@Path("workitem/{id}")
-	public Response getWorkItem(@PathParam("id") String id) {
-
-		if (workItemDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(workItemDAO.findById(Long.parseLong(id))).build();
+	public Response getWorkItem(@PathParam("id") Long id) {
+		WorkItem workItem = workItemDAO.findById(id);
+		if (workItem != null && !workItem.getStatus().equals(WorkItem.Status.REMOVED)) {
+			return Response.ok(workItemDAO.findById(id)).build();
 		}
 
 		return Response.status(Status.BAD_REQUEST).build();
@@ -117,19 +116,28 @@ public class ProjectiResource {
 
 	@GET
 	@Path("issue/{id}")
-	public Response getIssueById(@PathParam("id") String id) {
-
-		if (issueDAO.findById(Long.parseLong(id)) != null) {
-			return Response.ok(issueDAO.findById(Long.parseLong(id))).build();
+	public Response getIssueById(@PathParam("id") Long id) {
+		Issue issue = issueDAO.findById(id);
+		if (issue != null && !issue.getStatus().equals(Issue.Status.REMOVED)) {
+			return Response.ok(issueDAO.findById(id)).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
-	@POST
-	@Path("workitem/{id}/issue")
-	public Response createIssue(@PathParam("id") Long id, Issue issue) {
-		WorkItem workItem = workItemDAO.findById(id);
+	@PUT
+	@Path("workitem/{workitemid}/issue/{issueid}")
+	public Issue mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, @PathParam("issueid") Long issueId) {
+		WorkItem workItem = workItemDAO.findById(workItemId);
+		Issue issue = issueDAO.findById(issueId);
+		workItem = workItem.addIssue(issue);
+		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
+		return issueDAO.save(issue);
+	}
+	
+	@POST
+	@Path("issue")
+	public Response createIssue(Issue issue) {
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
 		return Response.created(location).build();
@@ -226,10 +234,11 @@ public class ProjectiResource {
 		User temp = userDAO.findById(id);
 		temp.setStatus(User.Status.REMOVED);
 		userDAO.save(temp);
+		
 		if (userDAO.findById(id).getStatus().equals(User.Status.REMOVED)) {
-			return Response.accepted().build();
+			return Response.ok(temp).build();
 		}
-		return Response.status(417).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@DELETE
@@ -237,12 +246,12 @@ public class ProjectiResource {
 	public Response deactivateTeam(@PathParam("id") Long id) {
 		Team temp = teamDAO.findById(id);
 		temp.setStatus(Team.Status.REMOVED);
-
 		teamDAO.save(temp);
+		
 		if (teamDAO.findById(id).getStatus().equals(Team.Status.REMOVED)) {
-			return Response.accepted().build();
+			return Response.ok(temp).build();
 		}
-		return Response.status(417).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@DELETE
@@ -251,23 +260,10 @@ public class ProjectiResource {
 		WorkItem temp = workItemDAO.findById(id);
 		temp.setStatus(WorkItem.Status.REMOVED);
 		workItemDAO.save(temp);
+		
 		if (workItemDAO.findById(id).getStatus().equals(WorkItem.Status.REMOVED)) {
-			return Response.accepted().build();
+			return Response.ok(temp).build();
 		}
-		return Response.status(417).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
-
-	@DELETE
-	@PathParam("issue/{id}")
-	public Response deactivateIssue(@PathParam("id") Long id) {
-
-//		Issue temp = issueDAO.findById(id);
-//		temp.setStatus(Issue.Status.REMOVED);
-//		issueDAO.save(temp);
-//		if (issueDAO.findById(id).getStatus().equals(Issue.Status.REMOVED)) {
-//			return Response.accepted().build();
-//		}
-		return Response.status(417).build();
-	}
-
 }
