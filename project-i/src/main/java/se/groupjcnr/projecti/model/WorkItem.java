@@ -72,40 +72,45 @@ public class WorkItem extends AbstractEntity {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public WorkItem setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public WorkItem setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public WorkItem setStatus(Status status) {
 		this.status = status;
+		return this;
 	}
 
 	public int getPriority() {
 		return priority;
 	}
 
-	public void setPriority(int priority) {
+	public WorkItem setPriority(int priority) {
 		this.priority = priority;
+		return this;
 	}
 
 	public List<Issue> getIssues() {
 		return issues;
 	}
 
-	public void setIssues(List<Issue> issues) {
+	public WorkItem setIssues(List<Issue> issues) {
 		this.issues = issues;
+		return this;
 	}
 
 	public User getUser() {
@@ -121,8 +126,9 @@ public class WorkItem extends AbstractEntity {
 		return team;
 	}
 
-	public void setTeam(Team team) {
+	public WorkItem setTeam(Team team) {
 		this.team = team;
+		return this;
 	}
 	
 	public WorkItem addIssue(Issue issue) {

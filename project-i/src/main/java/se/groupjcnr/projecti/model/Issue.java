@@ -44,8 +44,9 @@ public class Issue extends AbstractEntity {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public Issue setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public WorkItem getWorkItem() {
@@ -61,8 +62,9 @@ public class Issue extends AbstractEntity {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public Issue setStatus(Status status) {
 		this.status = status;
+		return this;
 	}
 	
 }

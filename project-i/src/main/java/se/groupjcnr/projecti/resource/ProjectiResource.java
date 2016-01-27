@@ -266,7 +266,7 @@ public class ProjectiResource {
 		
 		WorkItem workItem = workItemDAO.findById(id);
 		
-		if ((workItem != null) && !(workItem.getStatus() != WorkItem.Status.REMOVED)) {
+		if ((workItem != null) && (workItem.getStatus() != WorkItem.Status.REMOVED)) {
 			return Response.ok(workItemDAO.findById(id)).build();
 		}
 
@@ -286,8 +286,10 @@ public class ProjectiResource {
 	@GET
 	@Path("issue/{id}")
 	public Response getIssueById(@PathParam("id") Long id) {
+		
 		Issue issue = issueDAO.findById(id);
-		if (issue != null && !issue.getStatus().equals(Issue.Status.REMOVED)) {
+		
+		if ((issue != null) && (issue.getStatus() != Issue.Status.REMOVED)) {
 			return Response.ok(issueDAO.findById(id)).build();
 		}
 
@@ -296,9 +298,12 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("workitem/{workitemid}/issue/{issueid}")
-	public Issue mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, @PathParam("issueid") Long issueId) {
+	public Issue mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, 
+									@PathParam("issueid") Long issueId) {
+		
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		Issue issue = issueDAO.findById(issueId);
+		
 		workItem = workItem.addIssue(issue);
 		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
@@ -309,34 +314,53 @@ public class ProjectiResource {
 	@POST
 	@Path("issue")
 	public Response createIssue(Issue issue) {
+		
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
+		
 		return Response.created(location).build();
 	}
 
 	@PUT
 	@Path("issue/{id}")
-	public Response updateIssue(@PathParam("id") Long id, Issue issue) {
-		Issue temp = issueDAO.findById(id);
-		temp.setTitle(issue.getTitle());
-		temp.setWorkItem(issue.getWorkItem());
-		temp.setStatus(issue.getStatus());
+	public Response updateIssue(@PathParam("id") Long id, Issue issueChange) {
 
-		return Response.ok(issueDAO.save(temp)).build();
+		if (issueDAO.findById(id) == null) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
+		Issue issue = issueDAO.findById(id);
+		issue.setId(id);
+		issue = issue.setTitle(issueChange.getTitle())
+					 .setWorkItem(issueChange.getWorkItem())
+					 .setStatus(issueChange.getStatus());
+
+		issue = issueDAO.save(issue);
+		
+		return Response.ok(issue).build();
 	}
 
 	@PUT
 	@Path("workitem/{id}")
-	public Response updateWorkItem(@PathParam("id") Long id, WorkItem workItem) {
-		WorkItem temp = workItemDAO.findById(id);
-		temp.setTitle(workItem.getTitle());
-		temp.setDescription(workItem.getDescription());
-		temp.setPriority(workItem.getPriority());
-		temp.setIssues(workItem.getIssues());
-		temp.setUser(workItem.getUser());
-		temp.setTeam(workItem.getTeam());
-		temp.setStatus(workItem.getStatus());
-		return Response.ok(workItemDAO.save(temp)).build();
+	public Response updateWorkItem(@PathParam("id") Long id, WorkItem workItemChange) {
+
+		if (workItemDAO.findById(id) == null) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
+		WorkItem workItem = workItemDAO.findById(id);
+		workItem.setId(id);
+		workItem = workItem.setTitle(workItemChange.getTitle())
+					.setDescription(workItemChange.getDescription())
+					.setPriority(workItemChange.getPriority())
+					.setIssues(workItemChange.getIssues())
+					.setUser(workItemChange.getUser())
+					.setTeam(workItemChange.getTeam())
+					.setStatus(workItemChange.getStatus());
+		
+		workItem = workItemDAO.save(workItem);
+		
+		return Response.ok(workItem).build();
 	}
 
 	@PUT
