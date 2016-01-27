@@ -125,9 +125,9 @@ public class WorkItem extends AbstractEntity {
 		this.team = team;
 	}
 	
-	public Issue addIssue(Issue issue) {
+	public WorkItem addIssue(Issue issue) {
 		issues.add(issue);
-		return issue;
+		return this;
 	}
 
 }

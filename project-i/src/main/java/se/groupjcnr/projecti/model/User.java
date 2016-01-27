@@ -2,7 +2,6 @@ package se.groupjcnr.projecti.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,7 @@ import javax.persistence.Table;
 		@NamedQuery(name = "User.getUserByFirstName", query = "SELECT u FROM User u WHERE u.firstName =:firstname"),
 		@NamedQuery(name = "User.getUserByLastName", query = "SELECT u FROM User u WHERE u.lastName =:lastname"),
 		@NamedQuery(name = "User.getUserByUsername", query = "SELECT u FROM User u WHERE u.username =:username"),
-		@NamedQuery(name = "User.getUserByUserId", query = "SELECT u FROM User u WHERE u.userId =:userId"),
+		@NamedQuery(name = "User.getUserByUserId", query = "SELECT u FROM User u WHERE u.userId =:userid"),
 		@NamedQuery(name = "User.getUserByTeam", query = "SELECT u FROM User u WHERE u.teams =:teams")})
 public class User extends AbstractEntity {
 
@@ -78,56 +77,63 @@ public class User extends AbstractEntity {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	public User setFirstName(String firstName) {
 		this.firstName = firstName;
+		return this;
 	}
 
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public User setLastName(String lastName) {
 		this.lastName = lastName;
+		return this;
 	}
 
 	public List<Team> getTeams() {
 		return teams;
 	}
 
-	public void setTeams(List<Team> teams) {
+	public User setTeams(List<Team> teams) {
 		this.teams = teams;
+		return this;
 	}
 
 	public List<WorkItem> getWorkItems() {
 		return workItems;
 	}
 
-	public void setWorkItems(List<WorkItem> workItems) {
+	public User setWorkItems(List<WorkItem> workItems) {
 		this.workItems = workItems;
+		return this;
 	}
 
 	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public User setStatus(Status status) {
 		this.status = status;
+		return this;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public User setUsername(String username) {
 		this.username = username;
+		return this;
 	}
 
 	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public User setUserId(String userId) {
 		this.userId = userId;
+		return this;
 	}
 	
 	public User addWorkItem(WorkItem workItem) {
