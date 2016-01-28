@@ -421,7 +421,7 @@ public class ProjectiResource {
 	}
 
 	@GET
-	@Path("workitem/getbyuser/{id}")
+	@Path("workitem/byuser/{id}")
 	public Response getWorkItemsByUser(@PathParam("id") Long id) {
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
 				workItemDAO.getWorkItemsByUser(userDAO.findById(id))) {
