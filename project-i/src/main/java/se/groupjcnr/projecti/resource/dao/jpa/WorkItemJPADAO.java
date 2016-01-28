@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
-import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
 import se.groupjcnr.projecti.model.WorkItem;
 import se.groupjcnr.projecti.model.WorkItem.Status;
@@ -19,13 +18,21 @@ public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItem
 	}
 
 	@Override
-	public WorkItem getWorkItemByStatus(Status status) {
-		return query("WorkItem.getWorkItemByStatus", identity()).get(0);
+	public List<WorkItem> getWorkItemByStatus(Status status) {
+		if (queryVariable("status", status.toString(), "WorkItem.getWorkItemByStatus", identity()).size() > 0) {
+			return queryVariable("status", status.toString(), "WorkItem.getWorkItemByStatus", identity());
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public List<WorkItem> getWorkItemsByTeam(Team team) {
-		return query("WorkItem.getWorkItemsByTeam", identity());
+	public List<WorkItem> getWorkItemsByTeam(Long id) {
+		if (queryVariable("teamid", id.toString(), "WorkItem.getWorkItemByTeam", identity()).size() > 0) {
+			return queryVariable("teamid", id.toString(), "WorkItem.getWorkItemByTeam", identity());
+		} else {
+			return null;
+		}
 	}
 
 	@Override
