@@ -17,15 +17,6 @@ public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItem
 	}
 
 	@Override
-	public List<WorkItem> getWorkItemByStatus(String status) {
-		if (queryVariable("status", status, "WorkItem.getWorkItemByStatus", identity()).size() > 0) {
-			return queryVariable("status", status, "WorkItem.getWorkItemByStatus", identity());
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public List<WorkItem> getWorkItemsByUser(User user) {
 		return query("WorkItem.getWorkItemByUser", identity());
 	}
