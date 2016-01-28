@@ -176,6 +176,9 @@ public final class MakeJson {
 	public static WorkItem jsonToWorkItem(JsonObject json) throws JsonParseException {
 
 		if (json.get("id") == null) {
+			if (json.get("title") == null) {
+				return null;
+			}
 			String title = json.get("title").getAsString();
 			String description = json.get("description").getAsString();
 

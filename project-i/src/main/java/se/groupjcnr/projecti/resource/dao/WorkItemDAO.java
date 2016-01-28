@@ -8,9 +8,7 @@ import se.groupjcnr.projecti.model.WorkItem.Status;
 
 public interface WorkItemDAO extends CrudDAO<WorkItem> {
 
-	List<WorkItem> getWorkItemByStatus(Status status);
-	
-	List<WorkItem> getWorkItemsByTeam(Long id);
+	List<WorkItem> getWorkItemByStatus(String status);
 	
 	List<WorkItem> getWorkItemsByUser(User user);
 	
