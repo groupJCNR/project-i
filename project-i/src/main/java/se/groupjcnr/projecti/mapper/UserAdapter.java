@@ -17,8 +17,9 @@ public final class UserAdapter implements JsonSerializer<User>, JsonDeserializer
 	@Override
 	public JsonElement serialize(User user, Type typeOfSrc, 
 			JsonSerializationContext context) {
-
+		
 		JsonObject json = MakeJson.userToJson(user);
+		MakeJson.emptyIds();
 
 		return json;
 	}

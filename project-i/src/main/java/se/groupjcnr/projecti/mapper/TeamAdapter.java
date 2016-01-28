@@ -18,6 +18,8 @@ public final class TeamAdapter implements JsonSerializer<Team>, JsonDeserializer
 	public JsonElement serialize(Team team, Type typeOfSrc, JsonSerializationContext context) {
 
 		JsonObject json = MakeJson.teamToJson(team);
+		MakeJson.emptyIds();
+		
 		return json;
 	}
 

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "WORKITEM", schema = "PROJECTI")
 @NamedQueries(value = { 
 		@NamedQuery(name = "WorkItem.getWorkItemsByStatus", query = "SELECT w FROM WorkItem w WHERE w.status = :status"),
-		@NamedQuery(name = "WorkItem.getWorkItemsByTeam", query = "SELECT w FROM WorkItem w WHERE w.team = :team"),
+		@NamedQuery(name = "WorkItem.getWorkItemsByTeam", query = "SELECT w FROM WorkItem w WHERE w.team.id = :teamid"),
 	//	@NamedQuery(name = "WorkItem.getWorkItemsByPartDesc", query = "SELECT w FROM WorkItem w WHERE partialDesc LIKE = :partialDesc"),
 		@NamedQuery(name = "WorkItem.getAll", query = "SELECT w FROM WorkItem w")})
 public class WorkItem extends AbstractEntity {

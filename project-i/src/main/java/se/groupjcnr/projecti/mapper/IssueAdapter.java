@@ -16,7 +16,10 @@ public final class IssueAdapter implements JsonSerializer<Issue>, JsonDeserializ
 
 	@Override
 	public JsonElement serialize(Issue issue, Type type, JsonSerializationContext context) {
+		
 		JsonObject json = MakeJson.issueToJson(issue);
+		MakeJson.emptyIds();
+		
 		return json;
 	}
 	

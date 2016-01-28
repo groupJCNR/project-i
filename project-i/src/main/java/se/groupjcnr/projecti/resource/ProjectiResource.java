@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -36,7 +35,7 @@ import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.WorkItemJPADAO;
 
-@Path("i")
+@Path("integration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProjectiResource {
@@ -50,13 +49,11 @@ public class ProjectiResource {
 	@Context
 	private UriInfo uriInfo;
 
-	@Context
-	private HttpHeaders headers;
-
 	@POST
 	@Path("user")
 	public Response createUser(User user) {
 
+		user = userDAO.save(user).setUserId(user.getId() + user.getUsername());
 		user = userDAO.save(user);
 		URI location = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
 
@@ -81,7 +78,7 @@ public class ProjectiResource {
 	public Response getUserById(@PathParam("id") Long id) {
 
 		User user = userDAO.findById(id);
-		
+
 		if ((user != null) && (user.getStatus() != User.Status.REMOVED)) {
 			return Response.ok(user).build();
 		}
@@ -145,19 +142,18 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("user/{userid}/team/{teamid}")
-	public Response addUserToTeam(@PathParam("userid") Long userId, 
-								  @PathParam("teamid") Long teamId) {
-		
+	public Response mapUserToTeam(@PathParam("userid") Long userId, @PathParam("teamid") Long teamId) {
+
 		if ((userDAO.findById(userId) == null) && (teamDAO.findById(teamId) == null)) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		
+
 		User user = userDAO.findById(userId);
 		Team team = teamDAO.findById(teamId);
-		
+
 		user = userDAO.save(user.addTeam(team));
 		team = teamDAO.save(team.addUser(user));
-		
+
 		return Response.ok(user).build();
 	}
 
@@ -166,9 +162,10 @@ public class ProjectiResource {
 	public Response getUserByTeam(@PathParam("teamid") Long teamId) {
 		Team team = teamDAO.findById(teamId);
 
-		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(team.getUsers()) {};
-		
-		if(!result.getEntity().isEmpty()){
+		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(team.getUsers()) {
+		};
+
+		if (!result.getEntity().isEmpty()) {
 			return Response.ok(result).build();
 		}
 
@@ -178,7 +175,7 @@ public class ProjectiResource {
 	@DELETE
 	@Path("user/{id}")
 	public Response deactivateUser(@PathParam("id") Long id) {
-		
+
 		User user = userDAO.findById(id);
 		user = user.setStatus(User.Status.REMOVED);
 		user = userDAO.save(user);
@@ -186,7 +183,7 @@ public class ProjectiResource {
 		if (user.getStatus().equals(User.Status.REMOVED)) {
 			return Response.ok(user).build();
 		}
-		
+
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
@@ -203,8 +200,9 @@ public class ProjectiResource {
 	@GET
 	@Path("team")
 	public Response getTeams() {
-		
-		GenericEntity<Collection<Team>> result = new GenericEntity<Collection<Team>>(teamDAO.getAll()) {};
+
+		GenericEntity<Collection<Team>> result = new GenericEntity<Collection<Team>>(teamDAO.getAll()) {
+		};
 
 		if (!result.getEntity().isEmpty()) {
 			return Response.ok(result).build();
@@ -223,20 +221,18 @@ public class ProjectiResource {
 
 		Team team = teamDAO.findById(id);
 		team.setId(id);
-		team = team.setName(teamChange.getName())
-				.setStatus(teamChange.getStatus())
-				.setWorkItems(teamChange.getWorkItems())
-				.setUsers(teamChange.getUsers());
+		team = team.setName(teamChange.getName()).setStatus(teamChange.getStatus())
+				.setWorkItems(teamChange.getWorkItems()).setUsers(teamChange.getUsers());
 
 		team = teamDAO.save(team);
-		
+
 		return Response.ok(team).build();
 	}
-	
+
 	@DELETE
 	@Path("team/{id}")
 	public Response deactivateTeam(@PathParam("id") Long id) {
-		
+
 		Team team = teamDAO.findById(id);
 		team = team.setStatus(Team.Status.REMOVED);
 		team = teamDAO.save(team);
@@ -244,15 +240,16 @@ public class ProjectiResource {
 		if (team.getStatus().equals(Team.Status.REMOVED)) {
 			return Response.ok(team).build();
 		}
-		
+
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
 	@Path("workitem")
 	public Response getWorkItems() {
-		
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
+
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {
+		};
 
 		if (!result.getEntity().isEmpty()) {
 			return Response.ok(result).build();
@@ -264,9 +261,9 @@ public class ProjectiResource {
 	@GET
 	@Path("workitem/{id}")
 	public Response getWorkItem(@PathParam("id") Long id) {
-		
+
 		WorkItem workItem = workItemDAO.findById(id);
-		
+
 		if ((workItem != null) && (workItem.getStatus() != WorkItem.Status.REMOVED)) {
 			return Response.ok(workItemDAO.findById(id)).build();
 		}
@@ -287,45 +284,45 @@ public class ProjectiResource {
 	@GET
 	@Path("issue/{id}")
 	public Response getIssueById(@PathParam("id") Long id) {
-		
+
 		Issue issue = issueDAO.findById(id);
-		
+
 		if ((issue != null) && (issue.getStatus() != Issue.Status.REMOVED)) {
 			return Response.ok(issueDAO.findById(id)).build();
 		}
 
 		return Response.status(Status.BAD_REQUEST).build();
 	}
-	
+
 	@GET
-	@Path("workitem/hasissue")
-	public Response getWorkItemsWithIssues(@PathParam("id") Long id){
-		
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
+	@Path("workitem/byissue/{id}")
+	public Response getWorkItemsWithIssues(@PathParam("id") Long id) {
+
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {
+		};
+
 		List<WorkItem> item = new ArrayList<>();
 		result.getEntity().forEach(i -> {
-			
-			if(!(i.getIssues().isEmpty())){
-				for(Issue issue: i.getIssues())
-				{
-					if((issue != null ) && (issue.getStatus() != Issue.Status.REMOVED)){
+
+			if (!(i.getIssues().isEmpty())) {
+				for (Issue issue : i.getIssues()) {
+					if ((issue != null) && (issue.getStatus() != Issue.Status.REMOVED)) {
 						item.add(i);
 					}
 				}
 			}
 		});
-		
+
 		return Response.ok(item).build();
 	}
 
 	@PUT
 	@Path("workitem/{workitemid}/issue/{issueid}")
-	public Response mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, 
-									@PathParam("issueid") Long issueId) {
-		
+	public Response mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, @PathParam("issueid") Long issueId) {
+
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		Issue issue = issueDAO.findById(issueId);
-		
+
 		workItem = workItem.addIssue(issue);
 		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
@@ -336,10 +333,10 @@ public class ProjectiResource {
 	@POST
 	@Path("issue")
 	public Response createIssue(Issue issue) {
-		
+
 		issue = issueDAO.save(issue);
 		URI location = uriInfo.getAbsolutePathBuilder().path(issue.getId().toString()).build();
-		
+
 		return Response.created(location).build();
 	}
 
@@ -353,12 +350,11 @@ public class ProjectiResource {
 
 		Issue issue = issueDAO.findById(id);
 		issue.setId(id);
-		issue = issue.setTitle(issueChange.getTitle())
-					 .setWorkItem(issueChange.getWorkItem())
-					 .setStatus(issueChange.getStatus());
+		issue = issue.setTitle(issueChange.getTitle()).setWorkItem(issueChange.getWorkItem())
+				.setStatus(issueChange.getStatus());
 
 		issue = issueDAO.save(issue);
-		
+
 		return Response.ok(issue).build();
 	}
 
@@ -372,23 +368,19 @@ public class ProjectiResource {
 
 		WorkItem workItem = workItemDAO.findById(id);
 		workItem.setId(id);
-		workItem = workItem.setTitle(workItemChange.getTitle())
-					.setDescription(workItemChange.getDescription())
-					.setPriority(workItemChange.getPriority())
-					.setIssues(workItemChange.getIssues())
-					.setUser(workItemChange.getUser())
-					.setTeam(workItemChange.getTeam())
-					.setStatus(workItemChange.getStatus());
-		
+		workItem = workItem.setTitle(workItemChange.getTitle()).setDescription(workItemChange.getDescription())
+				.setPriority(workItemChange.getPriority()).setIssues(workItemChange.getIssues())
+				.setUser(workItemChange.getUser()).setTeam(workItemChange.getTeam())
+				.setStatus(workItemChange.getStatus());
+
 		workItem = workItemDAO.save(workItem);
-		
+
 		return Response.ok(workItem).build();
 	}
 
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
-	public Response mapWorkItemToUser(@PathParam("workitemid") Long workItemId, 
-									  @PathParam("userid") Long userId) {
+	public Response mapWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
 
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
@@ -399,32 +391,70 @@ public class ProjectiResource {
 		return Response.ok(workItem).build();
 	}
 
+	@PUT
+	@Path("workitem/{workitemid}/team/{teamid}")
+	public Response mapWorkItemToTeam(@PathParam("workitemid") Long workItemId, @PathParam("teamid") Long teamId) {
+
+		WorkItem workItem = workItemDAO.findById(workItemId);
+		Team team = teamDAO.findById(teamId);
+
+		team = teamDAO.save(team.addWorkItem(workItem));
+		workItem = workItemDAO.save(workItem.setTeam(team));
+
+		return Response.ok(workItem).build();
+	}
+
 	@GET
 	@Path("workitem/bystatus/{status}")
-	public Response getWorkItemsByStatus(@PathParam("id") Long id, 
-										 @PathParam("status") WorkItem.Status status) {
+	public Response getWorkItemsByStatus(@PathParam("status") String status) {
+		GenericEntity<Collection<WorkItem>> workItems = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {
+		};
 
-		
-		
-		return Response.ok(workItemDAO.getWorkItemByStatus(status)).build();
+		workItems.getEntity().forEach(w -> {
+			if (!w.getStatus().equals(WorkItem.Status.valueOf(status))) {
+				workItems.getEntity().remove(w);
+			}
+		});
+
+		if (workItems.getEntity().size() > 0) {
+			return Response.ok(workItems).build();
+		}
+
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
-	@Path("workitem/byteam/{team}")
-	public Response getWorkItemsByTeam(@PathParam("team") Team team) {
+	@Path("workitem/byteam/{id}")
+	public Response getWorkItemsByTeam(@PathParam("team") Long id) {
+		
+		 if (workItemDAO.getAll() == null) {
+		 return Response.status(Status.BAD_REQUEST).build();
+		 }
+		
+		 List<WorkItem> workItems = new ArrayList<>();
+		 workItemDAO.getAll().forEach(wi -> {
+		 if (wi.getTeam().getId().equals(id)) {
+		 workItems.add(wi);
+		 }
+		 });
+		
+		 return Response.ok(workItems).build();
 
-		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
-				workItemDAO.getWorkItemsByTeam(team)) {};
-
-		return Response.ok(result).build();
+//		Team temp = teamDAO.findById(id);
+//		if (temp.getWorkItems().size() > 0) {
+//			return Response.ok(temp.getWorkItems()).build();
+//		}
+//		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
-	@Path("workitem/getbyuser/{id}")
+	@Path("workitem/byuser/{id}")
 	public Response getWorkItemsByUser(@PathParam("id") Long id) {
+
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
 				workItemDAO.getWorkItemsByUser(userDAO.findById(id))) {
 		};
+
 		return Response.ok(result).build();
 	}
 

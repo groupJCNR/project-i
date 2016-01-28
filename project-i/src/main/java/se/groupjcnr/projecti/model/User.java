@@ -56,7 +56,7 @@ public class User extends AbstractEntity {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.status = Status.ACTIVE;
-		this.userId = username + this.getId();
+		this.userId = this.getId() + username;
 		this.teams = new ArrayList<>();
 		this.workItems = new ArrayList<>();
 	}
