@@ -298,7 +298,7 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("workitem/{workitemid}/issue/{issueid}")
-	public Issue mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, 
+	public Response mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, 
 									@PathParam("issueid") Long issueId) {
 		
 		WorkItem workItem = workItemDAO.findById(workItemId);
@@ -308,7 +308,7 @@ public class ProjectiResource {
 		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
 
-		return issueDAO.save(issue);
+		return Response.ok(issueDAO.save(issue)).build();
 	}
 
 	@POST
@@ -365,20 +365,25 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
-	public Response addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
+	public Response mapWorkItemToUser(@PathParam("workitemid") Long workItemId, 
+									  @PathParam("userid") Long userId) {
 
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
 
 		user = userDAO.save(user.addWorkItem(workItem));
+		workItem = workItemDAO.save(workItem.setUser(user));
 
-		return Response.ok(workItemDAO.save(workItem.setUser(user))).build();
+		return Response.ok(workItem).build();
 	}
 
 	@GET
 	@Path("workitem/bystatus/{status}")
-	public Response getWorkItemsByStatus(@PathParam("id") Long id, @PathParam("status") WorkItem.Status status) {
+	public Response getWorkItemsByStatus(@PathParam("id") Long id, 
+										 @PathParam("status") WorkItem.Status status) {
 
+		
+		
 		return Response.ok(workItemDAO.getWorkItemByStatus(status)).build();
 	}
 
@@ -387,8 +392,7 @@ public class ProjectiResource {
 	public Response getWorkItemsByTeam(@PathParam("team") Team team) {
 
 		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(
-				workItemDAO.getWorkItemsByTeam(team)) {
-		};
+				workItemDAO.getWorkItemsByTeam(team)) {};
 
 		return Response.ok(result).build();
 	}
