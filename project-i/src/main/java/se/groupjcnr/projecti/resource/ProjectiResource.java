@@ -1,6 +1,7 @@
 package se.groupjcnr.projecti.resource;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,17 +23,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.Issue;
-
+import se.groupjcnr.projecti.model.Team;
 import se.groupjcnr.projecti.model.User;
-import se.groupjcnr.projecti.resource.dao.TeamDAO;
 import se.groupjcnr.projecti.model.WorkItem;
 import se.groupjcnr.projecti.resource.dao.IssueDAO;
+import se.groupjcnr.projecti.resource.dao.TeamDAO;
 import se.groupjcnr.projecti.resource.dao.UserDAO;
-import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.WorkItemDAO;
 import se.groupjcnr.projecti.resource.dao.jpa.IssueJPADAO;
+import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.WorkItemJPADAO;
 
@@ -297,11 +297,33 @@ public class ProjectiResource {
 
 		return Response.status(Status.BAD_REQUEST).build();
 	}
+	
+	@GET
+	@Path("workitem/hasissue")
+	public Response getWorkItemsWithIssues(@PathParam("id") Long id){
+		
+		GenericEntity<Collection<WorkItem>> result = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
+		List<WorkItem> item = new ArrayList<>();
+		result.getEntity().forEach(i -> {
+			
+			if(!(i.getIssues().isEmpty())){
+				for(Issue issue: i.getIssues())
+				{
+					if((issue != null ) && (issue.getStatus() != Issue.Status.REMOVED)){
+						item.add(i);
+					}
+				}
+			}
+		});
+		
+		return Response.ok(item).build();
+	}
 
 	@PUT
 	@Path("workitem/{workitemid}/issue/{issueid}")
-	public Issue mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, @PathParam("issueid") Long issueId) {
-
+	public Response mapIssueToWorkItem(@PathParam("workitemid") Long workItemId, 
+									@PathParam("issueid") Long issueId) {
+		
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		Issue issue = issueDAO.findById(issueId);
 
@@ -309,7 +331,7 @@ public class ProjectiResource {
 		workItem = workItemDAO.save(workItem);
 		issue = issue.setWorkItem(workItem);
 
-		return issueDAO.save(issue);
+		return Response.ok(issueDAO.save(issue)).build();
 	}
 
 	@POST
@@ -362,14 +384,16 @@ public class ProjectiResource {
 
 	@PUT
 	@Path("workitem/{workitemid}/user/{userid}")
-	public Response addWorkItemToUser(@PathParam("workitemid") Long workItemId, @PathParam("userid") Long userId) {
+	public Response mapWorkItemToUser(@PathParam("workitemid") Long workItemId, 
+									  @PathParam("userid") Long userId) {
 
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		User user = userDAO.findById(userId);
 
 		user = userDAO.save(user.addWorkItem(workItem));
+		workItem = workItemDAO.save(workItem.setUser(user));
 
-		return Response.ok(workItemDAO.save(workItem.setUser(user))).build();
+		return Response.ok(workItem).build();
 	}
 
 	@GET

@@ -11,4 +11,5 @@ public final class IssueJPADAO extends AbstractJPADAO<Issue> implements IssueDAO
 		super(Issue.class, factory);
 	}
 
+
 }

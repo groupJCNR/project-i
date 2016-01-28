@@ -49,4 +49,5 @@ public class WorkItemJPADAO extends AbstractJPADAO<WorkItem> implements WorkItem
 	public List<WorkItem> getAll() {
 		return query("WorkItem.getAll", identity());
 	}
+
 }
