@@ -18,7 +18,6 @@ public final class MakeJson {
 
 	public static void emptyIds() {
 		ids.removeAll(ids);
-		System.out.println(ids.size());
 	}
 	
 	public static JsonObject userToJson(User user) {
