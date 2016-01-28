@@ -18,6 +18,8 @@ public final class WorkItemAdapter implements JsonSerializer<WorkItem>, JsonDese
 	public JsonElement serialize(WorkItem workItem, Type typeOfSrc, JsonSerializationContext context) {
 		
 		JsonObject json = MakeJson.workItemToJson(workItem);
+		MakeJson.emptyIds();
+		
 		return json;
 	}
 	

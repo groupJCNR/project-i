@@ -13,9 +13,22 @@ import se.groupjcnr.projecti.model.User;
 import se.groupjcnr.projecti.model.WorkItem;
 
 public final class MakeJson {
+	
+	private static List<Long> ids = new ArrayList<>();
 
+	public static void emptyIds() {
+		ids.removeAll(ids);
+		System.out.println(ids.size());
+	}
+	
 	public static JsonObject userToJson(User user) {
 
+		if (ids.contains(user.getId())) {
+			return new JsonObject();
+		}
+		
+		ids.add(user.getId());
+		
 		JsonObject json = new JsonObject();
 		json.addProperty("id", user.getId());
 		json.addProperty("firstname", user.getFirstName());
@@ -24,53 +37,73 @@ public final class MakeJson {
 		json.addProperty("username", user.getUsername());
 		json.addProperty("userid", user.getUserId());
 
-		JsonArray teams = new JsonArray();
-		user.getTeams().forEach(t -> {
-			JsonObject team = teamToJson(t);
-			teams.add(team);
-		});
+		if ((user.getTeams().size() > 0)) {			
+			JsonArray teams = new JsonArray();
+			for (Team t : user.getTeams()) {
+				JsonObject team = teamToJson(t);
+				teams.add(team);
+			}
 
-		json.add("teams", teams);
+			json.add("teams", teams);
+		}
 
-		JsonArray workItems = new JsonArray();
-		user.getWorkItems().forEach(wi -> {
-			JsonObject workItem = workItemToJson(wi);
-			workItems.add(workItem);
-		});
+		if ((user.getWorkItems().size() > 0)) {
+			JsonArray workItems = new JsonArray();
+			for (WorkItem wi : user.getWorkItems()) {
+				JsonObject workItem = workItemToJson(wi);
+				workItems.add(workItem);
+			}
 
-		json.add("workitems", workItems);
+			json.add("workitems", workItems);
+		}
 
 		return json;
 	}
 
 	public static JsonObject teamToJson(Team team) {
 
+		if (ids.contains(team.getId())) {
+			return new JsonObject();
+		}
+		
+		ids.add(team.getId());
+		
 		JsonObject json = new JsonObject();
 		json.addProperty("id", team.getId());
 		json.addProperty("name", team.getName());
 		json.addProperty("status", team.getStatus().toString());
 
-		JsonArray workItems = new JsonArray();
-		team.getWorkItems().forEach(wi -> {
-			JsonObject workItem = workItemToJson(wi);
-			workItems.add(workItem);
-		});
+		if ((team.getWorkItems().size() > 0)) {
+			JsonArray workItems = new JsonArray();
+			for (WorkItem wi : team.getWorkItems()) {
+				JsonObject workItem = workItemToJson(wi);
+				workItems.add(workItem);
+			}
 
-		json.add("workitems", workItems);
+			json.add("workitems", workItems);
+		}
 
-		JsonArray users = new JsonArray();
-		team.getUsers().forEach(u -> {
-			JsonObject user = userToJson(u);
-			users.add(user);
-		});
+		if ((team.getUsers().size() > 0)) {
+			JsonArray users = new JsonArray();
+			for (User u : team.getUsers()) {
+				JsonObject user = userToJson(u);
+				users.add(user);
+			}
 
-		json.add("users", users);
+			json.add("users", users);
+		}
 
 		return json;
 	}
 
 	public static JsonObject workItemToJson(WorkItem workItem) {
 
+		if (ids.contains(workItem.getId())) {
+			return new JsonObject();
+		}
+		
+		ids.add(workItem.getId());
+		
 		JsonObject json = new JsonObject();
 
 		json.addProperty("id", workItem.getId());
@@ -78,12 +111,13 @@ public final class MakeJson {
 		json.addProperty("description", workItem.getDescription());
 		json.addProperty("priority", workItem.getPriority());
 
-		if (workItem.getIssues().size() >= 1) {
+		if ((workItem.getIssues().size() > 0)) {
 			JsonArray issues = new JsonArray();
-			workItem.getIssues().forEach(i -> {
+			for (Issue i : workItem.getIssues()) {
 				JsonObject issue = issueToJson(i);
 				issues.add(issue);
-			});
+			}
+
 			json.add("issues", issues);
 		}
 
@@ -104,13 +138,21 @@ public final class MakeJson {
 
 	public static JsonObject issueToJson(Issue issue) {
 
+		if (ids.contains(issue.getId())) {
+			return new JsonObject();
+		}
+		
+		ids.add(issue.getId());
+		
 		JsonObject json = new JsonObject();
 		json.addProperty("id", issue.getId());
 		json.addProperty("title", issue.getTitle());
+		
 		if (issue.getWorkItem() != null) {
 			JsonObject workItem = workItemToJson(issue.getWorkItem());
 			json.add("workitem", workItem);
 		}
+		
 		json.addProperty("status", issue.getStatus().toString());
 
 		return json;

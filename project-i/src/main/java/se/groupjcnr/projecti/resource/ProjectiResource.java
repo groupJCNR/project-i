@@ -64,8 +64,7 @@ public class ProjectiResource {
 	@Path("user")
 	public Response getUsers() {
 
-		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {
-		};
+		GenericEntity<Collection<User>> result = new GenericEntity<Collection<User>>(userDAO.getAll()) {};
 
 		if (!result.getEntity().isEmpty()) {
 			return Response.ok(result).build();
