@@ -36,7 +36,7 @@ import se.groupjcnr.projecti.resource.dao.jpa.TeamJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.UserJPADAO;
 import se.groupjcnr.projecti.resource.dao.jpa.WorkItemJPADAO;
 
-@Path("i")
+@Path("integration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProjectiResource {
@@ -49,9 +49,6 @@ public class ProjectiResource {
 
 	@Context
 	private UriInfo uriInfo;
-
-	@Context
-	private HttpHeaders headers;
 
 	@POST
 	@Path("user")
