@@ -324,9 +324,9 @@ public class ProjectiResource {
 		WorkItem workItem = workItemDAO.findById(workItemId);
 		Issue issue = issueDAO.findById(issueId);
 
-		issue = issueDAO.save(issue.setWorkItem(workItem));
+		workItem = workItemDAO.save(workItem.addIssue(issue));
 
-		return Response.ok(issue).build();
+		return Response.ok(workItem).build();
 	}
 
 	@POST
