@@ -36,7 +36,7 @@ public final class MakeJson {
 		json.addProperty("username", user.getUsername());
 		json.addProperty("userid", user.getUserId());
 
-		if ((user.getTeams().size() > 0)) {			
+		if (user.getTeams().size() > 0) {			
 			JsonArray teams = new JsonArray();
 			for (Team t : user.getTeams()) {
 				JsonObject team = teamToJson(t);
@@ -46,7 +46,7 @@ public final class MakeJson {
 			json.add("teams", teams);
 		}
 
-		if ((user.getWorkItems().size() > 0)) {
+		if (user.getWorkItems().size() > 0) {
 			JsonArray workItems = new JsonArray();
 			for (WorkItem wi : user.getWorkItems()) {
 				JsonObject workItem = workItemToJson(wi);
@@ -72,7 +72,7 @@ public final class MakeJson {
 		json.addProperty("name", team.getName());
 		json.addProperty("status", team.getStatus().toString());
 
-		if ((team.getWorkItems().size() > 0)) {
+		if (team.getWorkItems().size() > 0) {
 			JsonArray workItems = new JsonArray();
 			for (WorkItem wi : team.getWorkItems()) {
 				JsonObject workItem = workItemToJson(wi);
@@ -82,7 +82,7 @@ public final class MakeJson {
 			json.add("workitems", workItems);
 		}
 
-		if ((team.getUsers().size() > 0)) {
+		if (team.getUsers().size() > 0) {
 			JsonArray users = new JsonArray();
 			for (User u : team.getUsers()) {
 				JsonObject user = userToJson(u);
@@ -110,7 +110,7 @@ public final class MakeJson {
 		json.addProperty("description", workItem.getDescription());
 		json.addProperty("priority", workItem.getPriority());
 
-		if ((workItem.getIssues().size() > 0)) {
+		if (workItem.getIssues().size() > 0) {
 			JsonArray issues = new JsonArray();
 			for (Issue i : workItem.getIssues()) {
 				JsonObject issue = issueToJson(i);

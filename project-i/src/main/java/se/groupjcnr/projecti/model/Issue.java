@@ -27,7 +27,6 @@ public class Issue extends AbstractEntity {
 	}
 
 	public Issue(String title) {
-		//WorkItem workItem ^
 		this.title = title;
 		this.workItem = null;
 		this.status = Status.UNRESOLVED;

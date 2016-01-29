@@ -413,11 +413,11 @@ public class ProjectiResource {
 		
 		GenericEntity<Collection<WorkItem>> workItems = new GenericEntity<Collection<WorkItem>>(workItemDAO.getAll()) {};
 
-		workItems.getEntity().forEach(w -> {
-			if (!w.getStatus().equals(WorkItem.Status.valueOf(status))) {
-				workItems.getEntity().remove(w);
+		for (WorkItem wi : workItems.getEntity()) {
+			if(!wi.getStatus().equals(WorkItem.Status.valueOf(status))) {
+				workItems.getEntity().remove(wi);
 			}
-		});
+		}
 
 		if (workItems.getEntity().size() > 0) {
 			return Response.ok(workItems).build();
